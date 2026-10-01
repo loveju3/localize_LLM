@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文件問答</title>
+<style>
+body{font:16px/1.6 system-ui;max-width:960px;margin:40px auto;padding:0 24px;background:#f7f9fc;color:#18263b}
+section{background:white;padding:24px;margin:20px 0;border:1px solid #dce3ed;border-radius:12px}
+input,select,textarea,button{font:inherit;padding:9px;border:1px solid #bac7d8;border-radius:6px;max-width:100%;box-sizing:border-box}
+button{background:#194e88;color:white;cursor:pointer}button:disabled{opacity:.5}textarea{width:100%;min-height:100px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere}#status{color:#8c321c}small{color:#53637b}.source{border-top:1px solid #ddd;padding-top:14px;margin-top:14px}
+</style>
+<h1>文件問答</h1><p>共用文件與索引，回答附原文與 PDF 頁序。</p>
+<section><label>工作區 API key <input id="key" type="password" autocomplete="off"></label>
+<button id="connect">連線／重新整理</button><p id="workspace"></p><small>金鑰僅保留在目前頁面記憶體。</small></section>
+<p id="status" role="status"></p>
+<section><h2>文件</h2><input id="file" type="file" accept="application/pdf"><button id="upload">上傳 PDF</button>
+<p><small>首次建檔可能需要下載 embedding 模型，請等待完成。掃描頁會提示需要 OCR。</small></p><div id="documents"></div></section>
+<section><h2>回答模型</h2><select id="model"></select> <button id="activate">設為共用預設</button>
+<p><small>只能選擇雲端 vLLM 已載入的模型。變更適用於之後送出的問題。</small></p></section>
+<section><h2>問問題</h2><textarea id="question" placeholder="例如：這份報告的主要結論有哪些？"></textarea>
+<button id="ask">詢問</button><button id="search">只搜尋文件</button><div id="answer"></div><div id="sources"></div></section>
+<script>
+const el=id=>document.getElementById(id);
+async function api(path,options={}) {
+  const headers={Authorization:'Bearer '+el('key').value,...options.headers};
+  const response=await fetch('/api/'+path,{...options,headers});
+  const data=await response.json();
+  if(!response.ok)throw new Error(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail));
+  return data;
+}
+async function run(action){
+  el('status').textContent='處理中…';document.querySelectorAll('button').forEach(b=>b.disabled=true);
+  try{await action();el('status').textContent='完成';}catch(e){el('status').textContent=e.message;}
+  finally{document.querySelectorAll('button').forEach(b=>b.disabled=false);}
+}
+function text(parent,tag,value){const node=document.createElement(tag);node.textContent=value;parent.appendChild(node);return node;}
+async function refresh(){
+  const ws=await api('workspace');el('workspace').textContent='工作區：'+ws.id+'｜Embedding：'+ws.embedding_spec.model;
+  const docs=await api('documents');el('documents').replaceChildren();
+  for(const doc of docs){const row=document.createElement('div');
+    text(row,'span',doc.filename+' · '+doc.page_count+' 頁 ');
+    const button=text(row,'button','開啟原檔');button.onclick=()=>run(async()=>{
+      const result=await api('documents/'+doc.id+'/download');
+      const link=text(row,'a','下載連結（5 分鐘有效）');link.href=result.url;link.target='_blank';link.rel='noopener';
+    });
+    for(const warning of doc.warnings)text(row,'p',warning);el('documents').appendChild(row);
+  }
+  const result=await api('models');el('model').replaceChildren();
+  for(const model of result.models){const option=document.createElement('option');option.value=model.id;
+    option.textContent=model.id+' ('+model.kind+' / '+model.status+')'+(model.active?' ✓':'');
+    option.disabled=model.status!=='available';option.selected=model.active;el('model').appendChild(option);}
+  if(result.inference_error)text(el('documents'),'p',result.inference_error);
+}
+function sources(rows){el('sources').replaceChildren();for(const source of rows){
+  const box=document.createElement('div');box.className='source';
+  text(box,'strong',source.source_id+' · '+source.filename+' · PDF 第 '+source.page+' 頁');
+  text(box,'pre',source.text);el('sources').appendChild(box);
+}}
+el('connect').onclick=()=>run(refresh);
+el('upload').onclick=()=>run(async()=>{if(!el('file').files.length)throw new Error('請選擇 PDF');
+  const form=new FormData();form.append('file',el('file').files[0]);await api('documents',{method:'POST',body:form});await refresh();});
+el('activate').onclick=()=>run(async()=>{if(!el('model').value)throw new Error('尚無可用模型');
+  await api('models/'+encodeURIComponent(el('model').value)+'/activate',{method:'POST'});await refresh();});
+for(const mode of ['ask','search'])el(mode).onclick=()=>run(async()=>{
+  const result=await api(mode,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:el('question').value})});
+  el('answer').replaceChildren();if(result.answer)text(el('answer'),'p',result.answer);
+  if(result.model)text(el('answer'),'small','模型：'+result.model.id+'｜'+result.elapsed_seconds+' 秒');
+  sources(result.citations||result.sources||[]);
+});
+</script></html>

@@ -1,0 +1,17 @@
+# Local macOS runtime; cloud GPU vLLM is a separate environment.
+fastapi
+uvicorn
+python-multipart
+pydantic-settings
+httpx
+pypdf
+sentence-transformers
+psycopg[binary]
+pgvector
+boto3
+python-docx
+openpyxl
+# Used directly for vector validation, model revision lookup, adapter validation.
+numpy
+huggingface-hub
+safetensors
