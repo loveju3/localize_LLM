@@ -18,8 +18,16 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere}#status{color:#8c321c}small{colo
 <p><small>只能選擇雲端 vLLM 已載入的模型。變更適用於之後送出的問題。</small></p></section>
 <section><h2>問問題</h2><textarea id="question" placeholder="例如：這份報告的主要結論有哪些？"></textarea>
 <button id="ask">詢問</button><button id="search">只搜尋文件</button><div id="answer"></div><div id="sources"></div></section>
+<section><h2>直接與模型對話</h2>
+<p><small>使用共用預設模型，不搜尋文件，也不提供文件引用。對話僅保留在目前頁面；送出時會連同歷史訊息傳給雲端模型。</small></p>
+<div id="chat-history" aria-live="polite"></div>
+<textarea id="chat-question" maxlength="2000" placeholder="例如：請用一句話介紹你能提供的協助。"></textarea>
+<button id="chat-send">傳送對話</button> <button id="chat-clear">清除對話</button>
+<p id="chat-meta"></p></section>
 <script>
 const el=id=>document.getElementById(id);
+let chatHistory=[];
+function clearChat(){chatHistory=[];el('chat-history').replaceChildren();el('chat-meta').textContent='';el('chat-question').value='';}
 async function api(path,options={}) {
   const headers={Authorization:'Bearer '+el('key').value,...options.headers};
   const response=await fetch('/api/'+path,{...options,headers});
@@ -59,7 +67,19 @@ el('connect').onclick=()=>run(refresh);
 el('upload').onclick=()=>run(async()=>{if(!el('file').files.length)throw new Error('請選擇 PDF');
   const form=new FormData();form.append('file',el('file').files[0]);await api('documents',{method:'POST',body:form});await refresh();});
 el('activate').onclick=()=>run(async()=>{if(!el('model').value)throw new Error('尚無可用模型');
-  await api('models/'+encodeURIComponent(el('model').value)+'/activate',{method:'POST'});await refresh();});
+  await api('models/'+encodeURIComponent(el('model').value)+'/activate',{method:'POST'});clearChat();await refresh();});
+el('chat-clear').onclick=clearChat;
+el('chat-send').onclick=()=>run(async()=>{
+  const question=el('chat-question').value.trim();if(!question)throw new Error('請輸入對話內容');
+  const messages=[...chatHistory,{role:'user',content:question}];
+  if(messages.length>20||messages.reduce((n,m)=>n+m.content.length,0)>12000)throw new Error('對話過長，請清除對話後重試');
+  const result=await api('chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages})});
+  chatHistory=[...messages,{role:'assistant',content:result.answer}];
+  el('chat-history').replaceChildren();for(const message of chatHistory){
+    text(el('chat-history'),'strong',message.role==='user'?'你':'模型');text(el('chat-history'),'pre',message.content);
+  }
+  el('chat-question').value='';el('chat-meta').textContent='模型：'+result.model.id+'｜'+result.elapsed_seconds+' 秒';
+});
 for(const mode of ['ask','search'])el(mode).onclick=()=>run(async()=>{
   const result=await api(mode,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:el('question').value})});
   el('answer').replaceChildren();if(result.answer)text(el('answer'),'p',result.answer);

@@ -7,6 +7,8 @@
 - [模型、算力與跨機器共用決策](docs/shared-cloud-design.md)
 - [第一版啟動與操作](docs/getting-started.md)
 - [驗證紀錄與未驗證項目](docs/verification.md)
+- [批次問答評估與模型比較](docs/evaluation.md)
+- [真實雲端測試與更換 RunPod 設定](docs/cloud-validation.md)
 
 ## 本機環境
 
@@ -48,6 +50,8 @@ uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 已實作 PDF 建檔、R2 原檔儲存、Neon 向量查詢、vLLM 問答、來源檢視、模型目錄與共用預設切換、LoRA 上傳／下載校驗。資料庫初始化、模型登錄及 adapter 準備透過 `python -m app.cli --help` 操作。
 
+網頁另提供「直接與模型對話」，可使用雲端模型做多輪聊天。2026-10-02 已以 RunPod Qwen3-8B、真實 Neon／R2 及一頁合成 PDF 驗證對話與文件問答串接；真實文件品質與 LoRA 載入仍需另測。
+
 初期是一個受信任內部工作區，所有持有工作區 API key 的人可查看該工作區資料及切換預設模型；不是對外多租戶權限系統。每台電腦自行執行本機介面並連接相同 Neon／R2。
 
 ## 驗證
@@ -58,3 +62,11 @@ python -m pip check
 ```
 
 單元測試使用模擬雲端服務，不會下載模型或啟動 GPU。真實雲端連線與模型品質需在設定服務後驗證。OCR、複雜表格解析、混合檢索、GPU 自動啟停與 LoRA 訓練流程尚未實作。
+
+已加入批次評估 CLI，可先離線驗證題庫：
+
+```bash
+python -m app.evaluation docs/evaluation.example.jsonl --validate-only
+```
+
+實際評估需將範本換成真實文件題目，並連接已啟動的 vLLM；詳見 [評估操作說明](docs/evaluation.md)。

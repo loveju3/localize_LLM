@@ -95,6 +95,12 @@ python -m app.cli prepare-model --id report-lora-v1 --output ./models
 
 ## 6. API 與測試
 
+首頁新增「直接與模型對話」，使用共用預設模型，可連續追問或清除對話。不檢索 PDF，也不產生文件引用；需要依文件核對的問題請使用上方「問問題」。歷史只保留在目前頁面，每次送出會連同歷史傳給雲端模型，不寫入 Neon 問答紀錄。切換預設模型會清除本頁聊天歷史。
+
+直接聊天 API 為 `POST /api/chat`，body 為 `{"messages":[{"role":"user","content":"你好"}]}`。最多 20 則交替排列的 user／assistant 訊息，總長最多 12000 字元，末則須為 user。長度限制不能取代模型 token 限制，若模型上下文不足需縮短對話。
+
+真實雲端測試結果、重跑指令與換 Pod 設定，見 [雲端驗證紀錄](cloud-validation.md)。
+
 API 文件位於 `/docs`。除首頁、健康檢查與 API 結構文件外，業務 API 均需 `Authorization: Bearer <APP_API_KEY>`。
 
 ```bash

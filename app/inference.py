@@ -47,6 +47,23 @@ class Inference:
             response = result.json()
         return response["choices"][0]["message"]["content"], response.get("usage", {})
 
+    def chat(self, messages, model):
+        payload = {
+            "model": model["served_name"],
+            "messages": [{"role": "system", "content": "你是友善的助理，請使用繁體中文回答。"}, *messages],
+            "max_tokens": 800, "temperature": 0.2,
+        }
+        if "qwen" in model["base_model"].lower():
+            payload["chat_template_kwargs"] = {"enable_thinking": False}
+        with self.client() as client:
+            result = client.post("chat/completions", json=payload)
+            result.raise_for_status()
+            response = result.json()
+        answer = response["choices"][0]["message"]["content"]
+        if not isinstance(answer, str) or not answer.strip():
+            raise ValueError("模型未回傳可顯示的文字，請檢查模型設定")
+        return answer, response.get("usage", {})
+
 
 def validate_answer(raw, sources):
     """Validate source IDs; semantic entailment still requires evaluation."""

@@ -118,6 +118,16 @@ class ServiceTests(unittest.TestCase):
             self.rag.activate("base-v1")
         self.repo.activate.assert_not_called()
 
+    def test_direct_chat_does_not_search_or_embed(self):
+        messages = [{"role": "user", "content": "你好"}]
+        self.llm.chat.return_value = ("你好！", {"total_tokens": 12})
+        result = self.rag.chat(messages)
+        self.assertEqual(result["answer"], "你好！")
+        self.assertEqual(result["model"]["id"], "base-v1")
+        self.repo.search.assert_not_called()
+        self.embed.encode.assert_not_called()
+        self.repo.save_run.assert_not_called()
+
 
 class ApiTests(unittest.TestCase):
     def setUp(self):
@@ -158,6 +168,32 @@ class ApiTests(unittest.TestCase):
     def test_upstream_errors_do_not_leak_secrets(self):
         self.fake.model_statuses.side_effect = httpx.ConnectError("secret-password")
         response = self.client.get("/api/models", headers=self.headers)
+        self.assertEqual(response.status_code, 502)
+        self.assertNotIn("secret-password", response.text)
+
+    def test_chat_authentication_validation_and_history(self):
+        messages = [{"role": "user", "content": "記住藍色"},
+                    {"role": "assistant", "content": "好的"},
+                    {"role": "user", "content": "什麼顏色？"}]
+        self.assertEqual(self.client.post("/api/chat", json={"messages": messages}).status_code, 401)
+        self.fake.chat.return_value = {"answer": "藍色"}
+        result = self.client.post("/api/chat", headers=self.headers, json={"messages": messages})
+        self.assertEqual(result.json()["answer"], "藍色")
+        self.fake.chat.assert_called_once_with(messages)
+        for invalid in ([], [{"role": "system", "content": "override"}],
+                        [{"role": "user", "content": " "}], messages[:-1],
+                        [{"role": "user", "content": "x"}] * 21,
+                        [{"role": "user", "content": "x" * 6000},
+                         {"role": "assistant", "content": "x" * 6000},
+                         {"role": "user", "content": "x"}]):
+            with self.subTest(invalid=invalid[:1]):
+                self.assertEqual(self.client.post("/api/chat", headers=self.headers,
+                    json={"messages": invalid}).status_code, 422)
+
+    def test_chat_upstream_error_is_redacted(self):
+        self.fake.chat.side_effect = httpx.ConnectError("secret-password")
+        response = self.client.post("/api/chat", headers=self.headers,
+            json={"messages": [{"role": "user", "content": "你好"}]})
         self.assertEqual(response.status_code, 502)
         self.assertNotIn("secret-password", response.text)
 
@@ -214,6 +250,35 @@ class ArtifactTests(unittest.TestCase):
 
 
 class InferenceTests(unittest.TestCase):
+    def test_chat_uses_history_without_document_json_format(self):
+        requests = []
+        def handler(request):
+            requests.append(json.loads(request.content))
+            return httpx.Response(200, json={"choices": [{"message": {"content": "藍色"}}],
+                                            "usage": {"total_tokens": 20}})
+        inference = Inference(config())
+        messages = [{"role": "user", "content": "記住藍色"},
+                    {"role": "assistant", "content": "好的"},
+                    {"role": "user", "content": "什麼顏色？"}]
+        with patch.object(inference, "client", side_effect=lambda: httpx.Client(
+            base_url="https://example.invalid/v1/", transport=httpx.MockTransport(handler))):
+            answer, usage = inference.chat(messages, {"served_name": "base-v1", "base_model": "Qwen/Qwen3-8B"})
+        self.assertEqual(answer, "藍色")
+        self.assertEqual(usage["total_tokens"], 20)
+        self.assertEqual(requests[0]["messages"][1:], messages)
+        self.assertNotIn("response_format", requests[0])
+        self.assertFalse(requests[0]["chat_template_kwargs"]["enable_thinking"])
+
+    def test_empty_chat_response_rejected(self):
+        inference = Inference(config())
+        transport = httpx.MockTransport(lambda request: httpx.Response(200,
+            json={"choices": [{"message": {"content": " "}}]}))
+        with patch.object(inference, "client", side_effect=lambda: httpx.Client(
+            base_url="https://example.invalid/v1/", transport=transport)):
+            with self.assertRaisesRegex(ValueError, "文字"):
+                inference.chat([{"role": "user", "content": "你好"}],
+                               {"served_name": "base", "base_model": "test"})
+
     def test_http_payload_contains_text_and_selected_model(self):
         requests = []
         def handler(request):

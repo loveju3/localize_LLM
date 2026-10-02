@@ -2,6 +2,7 @@ import secrets
 from functools import lru_cache
 from pathlib import Path
 from uuid import UUID
+from typing import Literal
 
 import httpx
 import psycopg
@@ -9,7 +10,7 @@ from botocore.exceptions import BotoCoreError, ClientError
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.config import Settings
 from app.db import Repository
@@ -44,6 +45,33 @@ def authorize(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)
 class Question(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
     document_ids: list[UUID] | None = Field(default=None, max_length=50)
+
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str = Field(min_length=1, max_length=6000)
+
+    @field_validator("content")
+    @classmethod
+    def nonempty(cls, value):
+        if not value.strip():
+            raise ValueError("訊息不可為空白")
+        return value.strip()
+
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage] = Field(min_length=1, max_length=20)
+
+    @model_validator(mode="after")
+    def valid_history(self):
+        if sum(len(message.content) for message in self.messages) > 12000:
+            raise ValueError("對話過長，請清除對話後重試")
+        if self.messages[-1].role != "user" or any(
+            message.role != ("user" if i % 2 == 0 else "assistant")
+            for i, message in enumerate(self.messages)
+        ):
+            raise ValueError("對話必須從使用者開始、交替排列，並以使用者問題結尾")
+        return self
 
 
 @app.exception_handler(ValueError)
@@ -121,6 +149,11 @@ def ask(body: Question):
     if not body.question.strip():
         raise HTTPException(400, "問題不可為空白")
     return service().ask(body.question.strip(), body.document_ids)
+
+
+@app.post("/api/chat", dependencies=[Depends(authorize)])
+def chat(body: ChatRequest):
+    return service().chat([message.model_dump() for message in body.messages])
 
 
 @app.get("/api/models", dependencies=[Depends(authorize)])

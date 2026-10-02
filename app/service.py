@@ -81,3 +81,14 @@ class RagService:
                        "prompt_version": PROMPT_VERSION})
         result["run_id"] = self.repo.save_run(question, result, snapshot, PROMPT_VERSION)
         return result
+
+    def chat(self, messages):
+        started = time.monotonic()
+        self.repo.validate()
+        model = self.repo.active_model()
+        if not model:
+            raise ValueError("尚未選擇可用的生成模型")
+        answer, usage = self.inference.chat(messages, model)
+        return {"answer": answer, "model": {key: model[key] for key in
+                ("id", "base_model", "base_revision", "served_name")},
+                "usage": usage, "elapsed_seconds": round(time.monotonic() - started, 3)}

@@ -2,7 +2,7 @@
 
 本機 `.venv` 不安裝 vLLM／CUDA。vLLM 另部署在租用的 Linux NVIDIA GPU 環境，以 HTTP API 供 Mac 呼叫。
 
-供應商、模型、GPU 型號及 vLLM 版本尚未選定，因此本次不建立未經驗證的雲端依賴鎖檔，也不啟動付費資源。
+2026-10-02 已使用 RunPod A40、vLLM 0.30.0 與 Qwen3-8B 完成真實對話及合成 PDF 問答測試；詳細版本與限制見 [雲端驗證紀錄](cloud-validation.md)。下列為部署檢查流程，並非每一項自動化都已實作。
 
 部署順序：
 
@@ -19,4 +19,4 @@ LoRA 訓練另建環境；adapter 需搭配相容的基礎模型。下載或載�
 
 ## 目前可用的部署輔助
 
-`python -m app.cli prepare-model --id <登錄ID>` 可在 GPU 主機準備 adapter 並產生啟動指令；不會啟動付費資源或自行執行 vLLM。操作順序見 [第一版啟動與操作](getting-started.md)。Runpod Pods 是初期推薦，尚未部署。
+`python -m app.cli prepare-model --id <登錄ID>` 可在 GPU 主機準備 adapter 並產生啟動指令；不會啟動付費資源或自行執行 vLLM。操作順序見 [第一版啟動與操作](getting-started.md)。GPU 啟停目前仍由操作者在 RunPod 管理。
