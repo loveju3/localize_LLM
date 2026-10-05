@@ -1,0 +1,2 @@
+# Optional deployment SDK; keep out of the application runtime dependencies.
+modal==1.6.1

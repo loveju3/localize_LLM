@@ -7,8 +7,8 @@ from typing import Literal
 import httpx
 import psycopg
 from botocore.exceptions import BotoCoreError, ClientError
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -18,6 +18,9 @@ from app.embeddings import Embedder
 from app.inference import Inference
 from app.service import RagService
 from app.storage import ObjectStore
+from app import lol_lab
+from app import lora_ui
+from app import training_ui
 
 app = FastAPI(title="Localize LLM", version="0.1.0")
 bearer = HTTPBearer(auto_error=False)
@@ -101,6 +104,75 @@ def index():
     return FileResponse(Path(__file__).with_name("index.html"))
 
 
+@app.get("/experiments/lol", include_in_schema=False)
+def lol_index():
+    return FileResponse(Path(__file__).with_name("lol.html"))
+
+
+@app.get("/training", include_in_schema=False)
+def training_index():
+    return FileResponse(Path(__file__).with_name("training.html"))
+
+
+class TrainingRequest(BaseModel):
+    model_config = {"extra": "forbid"}
+    rank: Literal[4, 8, 16, 32] = 8
+    alpha: int = Field(default=16, ge=1, le=128)
+    learning_rate: float = Field(default=0.0001, gt=0, le=0.01)
+    epochs: float = Field(default=1, gt=0, le=10)
+    max_steps: int = Field(default=-1, ge=-1, le=10000)
+    max_length: int = Field(default=1024, ge=128, le=2048)
+    gradient_accumulation: int = Field(default=4, ge=1, le=32)
+    seed: int = Field(default=42, ge=0, le=2147483647)
+
+
+@app.post("/api/training", dependencies=[Depends(authorize)], status_code=202)
+def start_training(body: TrainingRequest):
+    return training_ui.start(body.model_dump())
+
+
+@app.get("/api/training", dependencies=[Depends(authorize)])
+def training_runs():
+    return {"runs": training_ui.list_runs()}
+
+
+@app.get("/api/training/{run_id}", dependencies=[Depends(authorize)])
+def training_status(run_id: str):
+    return training_ui.status(run_id)
+
+
+@app.post("/api/training/{run_id}/publish", dependencies=[Depends(authorize)])
+def publish_training(run_id: str):
+    return training_ui.publish(service(), run_id)
+
+
+@app.get("/api/training/{run_id}/download", dependencies=[Depends(authorize)])
+def training_download(run_id: str, file: Literal["run.json", "metrics.jsonl", "adapter_config.json", "adapter_model.safetensors"]):
+    relative = "adapter/" + file if file.startswith("adapter_") else file
+    return Response(training_ui.read_bytes(run_id, relative), media_type="application/octet-stream",
+                    headers={"Content-Disposition": f'attachment; filename="{file}"'})
+
+
+@app.get("/api/lol/cases", dependencies=[Depends(authorize)])
+def lol_cases(split: Literal["train", "validation", "test"] = "test",
+              page: int = 1, page_size: int = 5):
+    if page < 1 or not 1 <= page_size <= 20:
+        raise HTTPException(400, "分頁範圍無效")
+    rows = [row for row in lol_lab.cases() if row["split"] == split]
+    return {"version": "lol-pilot-v1", "total": len(rows), "page": page,
+            "cases": rows[(page - 1) * page_size:page * page_size]}
+
+
+class LolRun(BaseModel):
+    case_id: str = Field(min_length=1, max_length=80)
+    model_id: str = Field(min_length=1, max_length=120)
+
+
+@app.post("/api/lol/run", dependencies=[Depends(authorize)])
+def lol_run(body: LolRun):
+    return lol_lab.run_case(service(), body.case_id, body.model_id)
+
+
 @app.get("/health")
 def health():
     return {"status": "ok", "cloud_verified": False}
@@ -159,6 +231,21 @@ def chat(body: ChatRequest):
 @app.get("/api/models", dependencies=[Depends(authorize)])
 def models():
     return service().model_statuses()
+
+
+@app.post("/api/lora", dependencies=[Depends(authorize)])
+def upload_adapter(model_id: str = Form(...), config_file: UploadFile = File(...),
+                   weights_file: UploadFile = File(...)):
+    try:
+        return lora_ui.save_upload(service(), model_id, config_file, weights_file)
+    finally:
+        config_file.file.close()
+        weights_file.file.close()
+
+
+@app.post("/api/lora/{model_id}/load", dependencies=[Depends(authorize)])
+def load_adapter(model_id: str):
+    return lora_ui.load_adapter(service(), model_id)
 
 
 @app.post("/api/models/{model_id}/activate", dependencies=[Depends(authorize)])

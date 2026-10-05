@@ -1,0 +1,41 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>英雄聯盟 LoRA 實驗</title>
+<style>body{font:16px/1.65 system-ui;max-width:1100px;margin:32px auto;padding:0 20px;background:#f5f7fb;color:#18263b}section,article{background:white;padding:20px;border:1px solid #dce3ed;border-radius:12px;margin:16px 0}button,input,select{font:inherit;padding:8px;margin:4px;max-width:100%}button{cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere}small{color:#53637b}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.result{background:#f5f7fb;padding:12px}textarea{width:95%;min-height:55px}#status{color:#8c321c}@media(max-width:700px){.columns{grid-template-columns:1fr}}</style>
+<p><a href="/training">LoRA GPU 訓練：調整參數與查看 metrics</a></p><h1>英雄聯盟 LoRA 實驗</h1><a href="/">回文件問答</a>
+<p>PC 版歷史更新試驗：14.22、25.S1.1、25.S1.2、25.06。不是今日版本攻略。</p>
+<section><label>工作區 API key <input id="key" type="password" autocomplete="off"></label><button id="connect">連線並載入模型</button>
+<p>知識記憶題不附答案；未見資料題附參考片段，測理解而非新知記憶。參考答案僅供評閱。</p>
+<label>A 模型 <select id="model-a"></select></label><label>B 模型 <select id="model-b"></select></label>
+<small>不更動共用預設。只有端點已載入的模型可測；沒有 LoRA 時可先記錄基礎模型。</small></section>
+<section><h2>加入訓練好的 LoRA</h2>
+<p>選擇同一份 adapter 的兩個檔案，上傳到雲端後，再載入供測試。</p>
+<label>模型 ID <input id="lora-id" placeholder="例如 lol-r8-20261005-01" pattern="[a-zA-Z0-9_-]{1,80}"></label><br>
+<label>設定檔 <input id="lora-config" type="file" accept=".json"></label><br>
+<label>權重檔 <input id="lora-weights" type="file" accept=".safetensors"></label>
+<button id="lora-upload">上傳到雲端</button>
+<p><label>已上傳 LoRA <select id="lora-list"></select></label><button id="lora-load">載入並選為 B 模型</button></p>
+<small>支援 Qwen3-8B 固定版本的標準 LoRA，載入 rank 上限 64；不改變共用預設。上傳只儲存檔案，載入／測試會使用 GPU。請先連線。</small>
+</section>
+<section><label>資料集 <select id="split"><option value="test">測試集</option><option value="validation">驗證集</option><option value="train">訓練集（觀察用）</option></select></label>
+<button id="prev">上一頁</button><span id="paging"></span><button id="next">下一頁</button><button id="export">匯出本次結果 JSON</button>
+<small>結果只保留在目前頁面，重整前請匯出。每次執行會呼叫雲端 GPU；不會訓練模型。</small></section>
+<p id="status" role="status">請先連線；金鑰不會存到瀏覽器儲存。</p><div id="cases"></div>
+<script>
+const el=id=>document.getElementById(id);let page=1,total=0,busy=false;const results=new Map();
+function node(parent,tag,value){const n=document.createElement(tag);n.textContent=value;parent.append(n);return n;}
+async function api(path,options={}){const r=await fetch('/api/'+path,{...options,headers:{Authorization:'Bearer '+el('key').value,...options.headers}});const d=await r.json();if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:JSON.stringify(d.detail));return d;}
+async function run(action,label){if(busy)return;busy=true;el('status').textContent=label;document.querySelectorAll('button,select').forEach(b=>b.disabled=true);try{const message=await action();el('status').textContent=message||'完成';}catch(e){el('status').textContent=e.message;}finally{busy=false;document.querySelectorAll('button,select').forEach(b=>b.disabled=false);el('prev').disabled=page===1;el('next').disabled=page*5>=total;}}
+function showResult(parent,result){node(parent,'pre',result.answer);node(parent,'small','模型：'+result.model.id+'｜'+result.elapsed_seconds+' 秒｜關鍵字檢查：'+(result.keyword_match===null?'不適用':result.keyword_match?'符合':'未符合')+'（不代表語意正確）');
+const rating=document.createElement('select');for(const [v,t] of [['','人工評閱'],['true','正確'],['false','不正確']]){const o=node(rating,'option',t);o.value=v;}rating.value=result.manual_review.correct===null?'':String(result.manual_review.correct);rating.onchange=()=>result.manual_review.correct=rating.value===''?null:rating.value==='true';parent.append(rating);const notes=node(parent,'textarea','');notes.placeholder='評閱備註';notes.value=result.manual_review.notes;notes.oninput=()=>result.manual_review.notes=notes.value;}
+async function load(){const data=await api('lol/cases?split='+el('split').value+'&page='+page);total=data.total;el('paging').textContent=page+' / '+Math.ceil(total/5)+' 頁，共 '+total+' 題';el('cases').replaceChildren();
+for(const c of data.cases){const box=node(el('cases'),'article','');node(box,'h2',c.id+' · '+({knowledge_recall:'知識記憶',unseen_context:'未見資料理解',refusal:'拒答'}[c.suite]));node(box,'pre',c.messages[1].content);const cols=node(box,'div','');cols.className='columns';
+for(const side of ['a','b']){const column=node(cols,'div','');node(column,'h3',side.toUpperCase()+' 回答');const button=node(column,'button','執行 '+side.toUpperCase());const output=node(column,'div','');output.className='result';const stored=results.get(c.id+side);if(stored)showResult(output,stored);button.onclick=()=>run(async()=>{const model=el('model-'+side).value;if(!model)throw Error('請先選擇已載入模型');const result=await api('lol/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({case_id:c.id,model_id:model})});results.set(c.id+side,result);output.replaceChildren();showResult(output,result);},'正在執行 '+c.id+'；Modal 冷啟動可能需要等待…');}
+const details=node(box,'details','');node(details,'summary','展開參考答案與來源（不會送給模型）');node(details,'p',c.reference_answer);const link=node(details,'a','Riot 官方來源 · '+c.patch);link.href=c.source_url;link.target='_blank';link.rel='noopener';}}
+async function refreshModels(selectedB){const d=await api('models');for(const side of ['a','b']){const previous=el('model-'+side).value;el('model-'+side).replaceChildren();for(const m of d.models){const o=node(el('model-'+side),'option',m.id+' · '+m.status);o.value=m.id;o.disabled=m.status!=='available';}const available=d.models.filter(m=>m.status==='available');const preferred=side==='b'&&selectedB?selectedB:previous;if(available.some(m=>m.id===preferred))el('model-'+side).value=preferred;else if(available.length)el('model-'+side).value=(available.find(m=>m.kind==='base')||available[0]).id;}
+el('lora-list').replaceChildren();for(const m of d.models.filter(m=>m.kind==='lora')){const o=node(el('lora-list'),'option',m.id+' · '+m.status);o.value=m.id;}if(selectedB)el('lora-list').value=selectedB;if(d.inference_error)throw Error(d.inference_error);}
+el('connect').onclick=()=>run(async()=>{await refreshModels();await load();},'驗證工作區與查詢雲端模型…');
+el('lora-upload').onclick=()=>run(async()=>{const id=el('lora-id').value.trim();const config=el('lora-config').files[0],weights=el('lora-weights').files[0];if(!/^[a-zA-Z0-9_-]{1,80}$/.test(id)||!config||!weights)throw Error('請填入模型 ID，並選擇設定與權重檔');const data=new FormData();data.append('model_id',id);data.append('config_file',config);data.append('weights_file',weights);await api('lora',{method:'POST',body:data});await refreshModels();el('lora-list').value=id;return '已上傳 '+id+'；請點「載入並選為 B 模型」';},'正在上傳與驗證 LoRA；完成後請點「載入並選為 B 模型」…');
+el('lora-load').onclick=()=>run(async()=>{const id=el('lora-list').value;if(!id)throw Error('請先上傳或選擇 LoRA');await api('lora/'+encodeURIComponent(id)+'/load',{method:'POST'});await refreshModels(id);return 'LoRA 已載入，B 模型已選擇 '+id;},'正在載入雲端 LoRA；GPU 冷啟動可能需要數分鐘…');
+el('split').onchange=()=>{page=1;run(load,'載入題庫…');};el('prev').onclick=()=>{page--;run(load,'載入上一頁…');};el('next').onclick=()=>{page++;run(load,'載入下一頁…');};
+el('export').onclick=()=>{const blob=new Blob([JSON.stringify({dataset_version:'lol-pilot-v1',exported_at:new Date().toISOString(),results:[...results].map(([slot,result])=>({slot,...result}))},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='lol-results-'+Date.now()+'.json';a.click();URL.revokeObjectURL(url);};
+</script></html>

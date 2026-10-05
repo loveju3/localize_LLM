@@ -1,0 +1,23 @@
+{
+  "version": "lol-pilot-v1",
+  "base_model": "Qwen/Qwen3-8B",
+  "base_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "files": {
+    "train.jsonl": {
+      "rows": 60,
+      "sha256": "92e0a964ecf2f6c52caf0905f1a65692ed92c1180c0868f79090faef509221ed"
+    },
+    "validation.jsonl": {
+      "rows": 20,
+      "sha256": "86d69c764f81d6e354e50376ef184964d97866729ca9e60235c188fe8d63a78b"
+    },
+    "test.jsonl": {
+      "rows": 32,
+      "sha256": "f062c21551ffac611a5d3566a7a7cb67494a4c8a2d8535f776f31b1f664432b1"
+    },
+    "catalog.jsonl": {
+      "rows": 112,
+      "sha256": "169a6e902c7e8bca218ca4a8e0ac5f0d7349d6ffb2fcc514e77cc2de47aa611c"
+    }
+  }
+}

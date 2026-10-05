@@ -9,6 +9,9 @@
 - [驗證紀錄與未驗證項目](docs/verification.md)
 - [批次問答評估與模型比較](docs/evaluation.md)
 - [真實雲端測試與更換 RunPod 設定](docs/cloud-validation.md)
+- [RunPod／Modal 相容部署與切換](docs/modal-deployment.md)
+- [英雄聯盟 LoRA 試驗資料與分頁比較](datasets/lol/README.md)
+- [SFT＋LoRA 訓練與 metrics 追蹤](docs/lora-training.md)
 
 ## 本機環境
 
@@ -70,3 +73,5 @@ python -m app.evaluation docs/evaluation.example.jsonl --validate-only
 ```
 
 實際評估需將範本換成真實文件題目，並連接已啟動的 vLLM；詳見 [評估操作說明](docs/evaluation.md)。
+
+GPU 訓練頁面：啟動本機網站後開啟 `/training`，可調整 LoRA 參數、提交 Modal GPU 任務、查看 metrics 並加入測試；詳見 [訓練頁面說明](docs/training-page.md)。

@@ -47,10 +47,10 @@ class Inference:
             response = result.json()
         return response["choices"][0]["message"]["content"], response.get("usage", {})
 
-    def chat(self, messages, model):
+    def chat(self, messages, model, system_prompt="你是友善的助理，請使用繁體中文回答。"):
         payload = {
             "model": model["served_name"],
-            "messages": [{"role": "system", "content": "你是友善的助理，請使用繁體中文回答。"}, *messages],
+            "messages": [{"role": "system", "content": system_prompt}, *messages],
             "max_tokens": 800, "temperature": 0.2,
         }
         if "qwen" in model["base_model"].lower():

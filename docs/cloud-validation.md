@@ -1,5 +1,19 @@
 # 真實雲端測試與更換 Pod
 
+## 2026-10-05 新 Pod 驗證
+
+- Pod `localize-llm-qwen3-a40`（`j4lohvb5fdzyoh`）：Secure Cloud、EU-SE-1、1 張 A40 48GB、9 vCPU、50GB RAM、50GB container disk，畫面合計約 US$0.50／小時；Global Volume 儲存另計。
+- 選擇部署頁當時 Available 的 A40，允許 Any region，使用 Global Volume，避免既有區域儲存限制 GPU 選擇。這次成功取得 GPU，不保證之後重啟仍有容量。
+- 固定映像 `vllm/vllm-openai@sha256:8a69ffad015f138d7170c4ddc429e230a3bc1c1719f67e14324749df200a4b90`，固定 Qwen3-8B revision `b968826d9c46dd6066d109eabc6255188de91218`。
+- HTTP 8000，使用 API key 驗證；SSH 使用 RunPod proxy，未暴露 direct TCP ports。本機 `.env` 已更新新 endpoint 與金鑰，金鑰未加入 Git。
+- 啟動參數：`Qwen/Qwen3-8B --revision b968826d9c46dd6066d109eabc6255188de91218 --host 0.0.0.0 --port 8000 --dtype auto --enforce-eager --gpu-memory-utilization 0.90 --max-model-len 8128 --max-num-seqs 1`。
+- 最初 `HF_HOME=/workspace/.huggingface` 的快取 config.json 被讀成無效 JSON。使用者確認重設後，改為 `HF_HOME=/root/.cache/huggingface`，模型成功啟動。根因尚未確定；目前使用容器本機快取，停止／重設後須重新下載，不應把私人文件只放在 container disk。
+- RunPod HTTP 顯示 Ready；帶驗證的 `/v1/models` 回傳 200，模型 ID 為 `Qwen/Qwen3-8B`。
+- 真實 HTTP 串接測試全部通過：兩輪直接聊天、PDF 上傳／去重／清單、R2 下載雜湊比對、Neon 檢索、帶正確頁碼引用的問答與無答案拒答。報告：`data/cloud-validation/live-run-oct05.jsonl`。
+- 既有四題合成題庫完成 4 題、0 錯誤；拒答判斷 4/4、檢索頁碼 3/3、引用頁碼 3/3、字串檢查 2/2。報告：`data/cloud-validation/evaluation-oct05.jsonl`。此結果只驗證合成案例的串接，不代表正式文件品質基準。
+
+測試完成後 Pod 保持執行，供使用者繼續操作本機 UI；仍持續計費。
+
 ## 2026-10-02 驗證環境
 
 - RunPod：使用者建立的 A40 48GB Pod `ziloubydlxhvsp`，畫面列價 US$0.50／小時。
