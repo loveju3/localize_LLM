@@ -23,3 +23,5 @@ Modal 冷啟動會掃描 Volume 內完整 adapter 並以 `--lora-modules` 載入
 2026-10-05：透過本機 POST /api/lora 上傳 83 MiB adapter，回傳 200；POST /api/lora/lol-r8-20261005-01/load 回傳 available。模型列表確認原模型與 adapter 都 available，同一題 A／B 請求皆成功，結果在 data/training/lol-r8-20261005-01/serving-verification.json。此題兩者皆錯，不能宣稱訓練品質改善。52 項單元測試執行成功（6 項資料庫測試略過）。
 
 另已驗證閒置縮到零後的 GPU 冷啟動：容器重新載入基礎權重及持久 adapter，重複載入接口回傳 available，原模型與 LoRA 均列為 available。
+
+網站使用 sessionStorage 保留同一瀏覽器分頁的工作區登入，切換回答測試／訓練／文件頁時自動連線。登出或關閉分頁可結束此會話；不使用 localStorage 永久保存金鑰。

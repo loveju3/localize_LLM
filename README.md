@@ -2,6 +2,7 @@
 
 以開源模型與雲端 vLLM 建立中英文文件問答。第一階段以少量 PDF、可靠回答與來源引用為主。
 
+- [LLM 完整教學：16 章、程式碼導讀與模組呼叫圖](docs/llm教學/README.md)
 - [需求與架構討論整理](docs/project-plan.md)
 - [雲端推論環境規劃](docs/cloud-runtime.md)
 - [模型、算力與跨機器共用決策](docs/shared-cloud-design.md)

@@ -7,11 +7,11 @@ section{background:white;padding:24px;margin:20px 0;border:1px solid #dce3ed;bor
 input,select,textarea,button{font:inherit;padding:9px;border:1px solid #bac7d8;border-radius:6px;max-width:100%;box-sizing:border-box}
 button{background:#194e88;color:white;cursor:pointer}button:disabled{opacity:.5}textarea{width:100%;min-height:100px}
 pre{white-space:pre-wrap;overflow-wrap:anywhere}#status{color:#8c321c}small{color:#53637b}.source{border-top:1px solid #ddd;padding-top:14px;margin-top:14px}
-</style>
-<p><a href="/training">LoRA GPU 訓練：調整參數與查看 metrics</a></p><h1>文件問答</h1><p>共用文件與索引，回答附原文與 PDF 頁序。</p>
-<p><a href="/experiments/lol">LoRA 上傳、雲端載入與英雄聯盟模型比較</a></p>
+nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}nav.tabs a{padding:10px 18px;border:1px solid #bac7d8;border-radius:8px;text-decoration:none;background:white;color:#194e88}nav.tabs a[aria-current="page"]{background:#194e88;color:white;border-color:#194e88}</style>
+<nav class="tabs" aria-label="主要分頁"><a href="/">回答測試</a><a href="/training">LoRA GPU 訓練</a><a href="/documents" aria-current="page">文件問答</a></nav><h1>文件問答</h1><p>共用文件與索引，回答附原文與 PDF 頁序。</p>
+<p><a href="/">LoRA 上傳、雲端載入與英雄聯盟模型比較</a></p>
 <section><label>工作區 API key <input id="key" type="password" autocomplete="off"></label>
-<button id="connect">連線／重新整理</button><p id="workspace"></p><small>金鑰僅保留在目前頁面記憶體。</small></section>
+<button id="connect">連線／重新整理</button><p id="workspace"></p><small>登入狀態保留於本瀏覽器分頁，切換頁面無須重新輸入；可按登出清除。</small></section>
 <p id="status" role="status"></p>
 <section><h2>文件</h2><input id="file" type="file" accept="application/pdf"><button id="upload">上傳 PDF</button>
 <p><small>首次建檔可能需要下載 embedding 模型，請等待完成。掃描頁會提示需要 OCR。</small></p><div id="documents"></div></section>
@@ -26,13 +26,17 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere}#status{color:#8c321c}small{colo
 <button id="chat-send">傳送對話</button> <button id="chat-clear">清除對話</button>
 <p id="chat-meta"></p></section>
 <script>
+const sessionKey='localize-workspace-key';
+function rememberLogin(response){if(response.ok)sessionStorage.setItem(sessionKey,document.getElementById('key').value);else if(response.status===401)sessionStorage.removeItem(sessionKey);}
+window.addEventListener('DOMContentLoaded',()=>{const input=document.getElementById('key');const saved=sessionStorage.getItem(sessionKey);if(saved){input.value=saved;document.getElementById('connect').click();}const logout=document.createElement('button');logout.textContent='登出';logout.id='logout';logout.onclick=()=>{sessionStorage.removeItem(sessionKey);input.value='';location.reload();};document.getElementById('connect').after(logout);});
+
 const el=id=>document.getElementById(id);
 let chatHistory=[];
 function clearChat(){chatHistory=[];el('chat-history').replaceChildren();el('chat-meta').textContent='';el('chat-question').value='';}
 async function api(path,options={}) {
   const headers={Authorization:'Bearer '+el('key').value,...options.headers};
   const response=await fetch('/api/'+path,{...options,headers});
-  const data=await response.json();
+  rememberLogin(response);const data=await response.json();
   if(!response.ok)throw new Error(typeof data.detail==='string'?data.detail:JSON.stringify(data.detail));
   return data;
 }

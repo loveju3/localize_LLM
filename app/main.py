@@ -101,6 +101,11 @@ for error_type in (psycopg.Error, httpx.HTTPError, BotoCoreError, ClientError):
 
 @app.get("/", include_in_schema=False)
 def index():
+    return FileResponse(Path(__file__).with_name("lol.html"))
+
+
+@app.get("/documents", include_in_schema=False)
+def documents_index():
     return FileResponse(Path(__file__).with_name("index.html"))
 
 

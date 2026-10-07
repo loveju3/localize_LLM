@@ -17,3 +17,5 @@
 ## 實測紀錄
 
 2026-10-05 已由 POST /api/training 提交 ui-ed755d970fd24241ab67，回傳 202 與 FunctionCall ID。NVIDIA L40S 完成 2 optimizer steps，驗證 loss 3.484849 → 3.062756，metrics 5 筆；四項下載均成功，adapter 雜湊與雲端 run.json 一致。新產物登錄與既有產物重複登錄皆通過。瀏覽器實際顯示完成狀態、數值、表格與 loss 曲線；亦可切換既有完整 15-step 訓練。58 項單元測試成功（6 項資料庫測試略過）。
+
+網站使用 sessionStorage 保留同一瀏覽器分頁的工作區登入，切換回答測試／訓練／文件頁時自動連線。登出或關閉分頁可結束此會話；不使用 localStorage 永久保存金鑰。

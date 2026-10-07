@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>英雄聯盟 LoRA 實驗</title>
-<style>body{font:16px/1.65 system-ui;max-width:1100px;margin:32px auto;padding:0 20px;background:#f5f7fb;color:#18263b}section,article{background:white;padding:20px;border:1px solid #dce3ed;border-radius:12px;margin:16px 0}button,input,select{font:inherit;padding:8px;margin:4px;max-width:100%}button{cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere}small{color:#53637b}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.result{background:#f5f7fb;padding:12px}textarea{width:95%;min-height:55px}#status{color:#8c321c}@media(max-width:700px){.columns{grid-template-columns:1fr}}</style>
-<p><a href="/training">LoRA GPU 訓練：調整參數與查看 metrics</a></p><h1>英雄聯盟 LoRA 實驗</h1><a href="/">回文件問答</a>
+<style>body{font:16px/1.65 system-ui;max-width:1100px;margin:32px auto;padding:0 20px;background:#f5f7fb;color:#18263b}section,article{background:white;padding:20px;border:1px solid #dce3ed;border-radius:12px;margin:16px 0}button,input,select{font:inherit;padding:8px;margin:4px;max-width:100%}button{cursor:pointer}pre{white-space:pre-wrap;overflow-wrap:anywhere}small{color:#53637b}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.result{background:#f5f7fb;padding:12px}textarea{width:95%;min-height:55px}#status{color:#8c321c}@media(max-width:700px){.columns{grid-template-columns:1fr}}nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}nav.tabs a{padding:10px 18px;border:1px solid #bac7d8;border-radius:8px;text-decoration:none;background:white;color:#194e88}nav.tabs a[aria-current="page"]{background:#194e88;color:white;border-color:#194e88}</style>
+<nav class="tabs" aria-label="主要分頁"><a href="/" aria-current="page">回答測試</a><a href="/training">LoRA GPU 訓練</a><a href="/documents">文件問答</a></nav><h1>模型回答測試</h1>
 <p>PC 版歷史更新試驗：14.22、25.S1.1、25.S1.2、25.06。不是今日版本攻略。</p>
 <section><label>工作區 API key <input id="key" type="password" autocomplete="off"></label><button id="connect">連線並載入模型</button>
 <p>知識記憶題不附答案；未見資料題附參考片段，測理解而非新知記憶。參考答案僅供評閱。</p>
@@ -19,11 +19,15 @@
 <section><label>資料集 <select id="split"><option value="test">測試集</option><option value="validation">驗證集</option><option value="train">訓練集（觀察用）</option></select></label>
 <button id="prev">上一頁</button><span id="paging"></span><button id="next">下一頁</button><button id="export">匯出本次結果 JSON</button>
 <small>結果只保留在目前頁面，重整前請匯出。每次執行會呼叫雲端 GPU；不會訓練模型。</small></section>
-<p id="status" role="status">請先連線；金鑰不會存到瀏覽器儲存。</p><div id="cases"></div>
+<p id="status" role="status">請先連線；登入後可直接切換分頁。</p><div id="cases"></div>
 <script>
+const sessionKey='localize-workspace-key';
+function rememberLogin(response){if(response.ok)sessionStorage.setItem(sessionKey,document.getElementById('key').value);else if(response.status===401)sessionStorage.removeItem(sessionKey);}
+window.addEventListener('DOMContentLoaded',()=>{const input=document.getElementById('key');const saved=sessionStorage.getItem(sessionKey);if(saved){input.value=saved;document.getElementById('connect').click();}const logout=document.createElement('button');logout.textContent='登出';logout.id='logout';logout.onclick=()=>{sessionStorage.removeItem(sessionKey);input.value='';location.reload();};document.getElementById('connect').after(logout);});
+
 const el=id=>document.getElementById(id);let page=1,total=0,busy=false;const results=new Map();
 function node(parent,tag,value){const n=document.createElement(tag);n.textContent=value;parent.append(n);return n;}
-async function api(path,options={}){const r=await fetch('/api/'+path,{...options,headers:{Authorization:'Bearer '+el('key').value,...options.headers}});const d=await r.json();if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:JSON.stringify(d.detail));return d;}
+async function api(path,options={}){const r=await fetch('/api/'+path,{...options,headers:{Authorization:'Bearer '+el('key').value,...options.headers}});rememberLogin(r);const d=await r.json();if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:JSON.stringify(d.detail));return d;}
 async function run(action,label){if(busy)return;busy=true;el('status').textContent=label;document.querySelectorAll('button,select').forEach(b=>b.disabled=true);try{const message=await action();el('status').textContent=message||'完成';}catch(e){el('status').textContent=e.message;}finally{busy=false;document.querySelectorAll('button,select').forEach(b=>b.disabled=false);el('prev').disabled=page===1;el('next').disabled=page*5>=total;}}
 function showResult(parent,result){node(parent,'pre',result.answer);node(parent,'small','模型：'+result.model.id+'｜'+result.elapsed_seconds+' 秒｜關鍵字檢查：'+(result.keyword_match===null?'不適用':result.keyword_match?'符合':'未符合')+'（不代表語意正確）');
 const rating=document.createElement('select');for(const [v,t] of [['','人工評閱'],['true','正確'],['false','不正確']]){const o=node(rating,'option',t);o.value=v;}rating.value=result.manual_review.correct===null?'':String(result.manual_review.correct);rating.onchange=()=>result.manual_review.correct=rating.value===''?null:rating.value==='true';parent.append(rating);const notes=node(parent,'textarea','');notes.placeholder='評閱備註';notes.value=result.manual_review.notes;notes.oninput=()=>result.manual_review.notes=notes.value;}
