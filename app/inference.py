@@ -64,6 +64,39 @@ class Inference:
             raise ValueError("模型未回傳可顯示的文字，請檢查模型設定")
         return answer, response.get("usage", {})
 
+    def next_message(self, messages, model, tools, tool_choice="auto"):
+        payload = {"model": model["served_name"], "messages": messages,
+                   "tools": tools, "tool_choice": tool_choice,
+                   "max_tokens": 1200, "temperature": 0.2}
+        if tool_choice == "none":
+            payload["response_format"] = {"type": "json_object"}
+        if "qwen" in model["base_model"].lower():
+            payload["chat_template_kwargs"] = {"enable_thinking": False}
+        with self.client() as client:
+            result = client.post("chat/completions", json=payload)
+            result.raise_for_status()
+            response = result.json()
+        try:
+            message = response["choices"][0]["message"]
+            if not isinstance(message, dict):
+                raise ValueError
+            calls = message.get("tool_calls") or []
+            if not isinstance(calls, list):
+                raise ValueError
+            ids = set()
+            for call in calls:
+                if (not isinstance(call, dict) or call.get("type") != "function"
+                        or not isinstance(call.get("id"), str) or not call["id"]
+                        or call["id"] in ids or not isinstance(call.get("function"), dict)):
+                    raise ValueError
+                ids.add(call["id"])
+            if not calls and not isinstance(message.get("content"), str):
+                raise ValueError
+        except (KeyError, IndexError, TypeError, ValueError):
+            raise ValueError("模型回傳的工具訊息格式不正確，請檢查工具呼叫設定") from None
+        return {"role": "assistant", "content": message.get("content"),
+                **({"tool_calls": calls} if calls else {})}, response.get("usage") or {}
+
 
 def validate_answer(raw, sources):
     """Validate source IDs; semantic entailment still requires evaluation."""

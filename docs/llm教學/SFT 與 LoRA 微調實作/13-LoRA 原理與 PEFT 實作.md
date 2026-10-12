@@ -53,7 +53,7 @@ sequenceDiagram
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 114～120 行。[跳至起始行](<../../../training/lora.py#L114>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 114～120 行。[VS Code：第 114 行](../../../training/lora.py#L114) · [GitHub：第 114 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L114)
 
 <!-- project-code: training/lora.py:114-120 -->
 ```python
@@ -78,7 +78,7 @@ if not trainable or any(p.requires_grad and "lora_" not in name for name, p in m
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 114～116 行。[跳至起始行](<../../../training/lora.py#L114>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 114～116 行。[VS Code：第 114 行](../../../training/lora.py#L114) · [GitHub：第 114 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L114)
 
 <!-- project-code: training/lora.py:114-116 -->
 ```python
@@ -97,7 +97,7 @@ Dropout 設為 0.05，用於訓練 LoRA 分支的正則化。它和 temperature 
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 114～116 行。[跳至起始行](<../../../training/lora.py#L114>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 114～116 行。[VS Code：第 114 行](../../../training/lora.py#L114) · [GitHub：第 114 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L114)
 
 <!-- project-code: training/lora.py:114-116 -->
 ```python
@@ -116,7 +116,7 @@ model = get_peft_model(model, LoraConfig(r=config.rank, lora_alpha=config.alpha,
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 114～116 行。[跳至起始行](<../../../training/lora.py#L114>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 114～116 行。[VS Code：第 114 行](../../../training/lora.py#L114) · [GitHub：第 114 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L114)
 
 <!-- project-code: training/lora.py:114-116 -->
 ```python
@@ -135,7 +135,7 @@ model = get_peft_model(model, LoraConfig(r=config.rank, lora_alpha=config.alpha,
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 117～120 行。[跳至起始行](<../../../training/lora.py#L117>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 117～120 行。[VS Code：第 117 行](../../../training/lora.py#L117) · [GitHub：第 117 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L117)
 
 <!-- project-code: training/lora.py:117-120 -->
 ```python
@@ -155,7 +155,7 @@ if not trainable or any(p.requires_grad and "lora_" not in name for name, p in m
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 117～123 行。[跳至起始行](<../../../training/lora.py#L117>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 117～123 行。[VS Code：第 117 行](../../../training/lora.py#L117) · [GitHub：第 117 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L117)
 
 <!-- project-code: training/lora.py:117-123 -->
 ```python
@@ -178,7 +178,7 @@ QLoRA 的核心是對凍結基礎權重採低位元量化，再訓練 adapter，
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 111～116 行。[跳至起始行](<../../../training/lora.py#L111>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 111～116 行。[VS Code：第 111 行](../../../training/lora.py#L111) · [GitHub：第 111 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L111)
 
 <!-- project-code: training/lora.py:111-116 -->
 ```python

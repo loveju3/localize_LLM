@@ -61,7 +61,7 @@ flowchart TD
 
 **專案程式碼（節錄）**
 
-檔案：[app/service.py](<../../../app/service.py>)；位置：`RagService.ask`，第 64～78 行。[跳至起始行](<../../../app/service.py#L64>)
+檔案：[app/service.py](../../../app/service.py)；位置：`RagService.ask`，第 64～78 行。[VS Code：第 64 行](../../../app/service.py#L64) · [GitHub：第 64 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/service.py#L64)
 
 <!-- project-code: app/service.py:64-78 -->
 ```python
@@ -92,7 +92,7 @@ def ask(self, question, document_ids=None):
 
 **專案程式碼（節錄）**
 
-檔案：[app/service.py](<../../../app/service.py>)；位置：`RagService.search`，第 37～41 行。[跳至起始行](<../../../app/service.py#L37>)
+檔案：[app/service.py](../../../app/service.py)；位置：`RagService.search`，第 37～41 行。[VS Code：第 37 行](../../../app/service.py#L37) · [GitHub：第 37 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/service.py#L37)
 
 <!-- project-code: app/service.py:37-41 -->
 ```python
@@ -113,7 +113,7 @@ return [{"source_id": f"S{i + 1}", "chunk_id": str(row["id"]),
 
 **專案程式碼（節錄）**
 
-檔案：[app/inference.py](<../../../app/inference.py>)；位置：`PROMPT_VERSION／SYSTEM_PROMPT`，第 5～11 行。[跳至起始行](<../../../app/inference.py#L5>)
+檔案：[app/inference.py](../../../app/inference.py)；位置：`PROMPT_VERSION／SYSTEM_PROMPT`，第 5～11 行。[VS Code：第 5 行](../../../app/inference.py#L5) · [GitHub：第 5 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/inference.py#L5)
 
 <!-- project-code: app/inference.py:5-11 -->
 ```python
@@ -136,7 +136,7 @@ source_ids 僅列真正支持回答的來源 ID，不可捏造。證據不足時
 
 **專案程式碼（節錄）**
 
-檔案：[app/inference.py](<../../../app/inference.py>)；位置：`SYSTEM_PROMPT`，第 5～11 行。[跳至起始行](<../../../app/inference.py#L5>)
+檔案：[app/inference.py](../../../app/inference.py)；位置：`SYSTEM_PROMPT`，第 5～11 行。[VS Code：第 5 行](../../../app/inference.py#L5) · [GitHub：第 5 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/inference.py#L5)
 
 <!-- project-code: app/inference.py:5-11 -->
 ```python
@@ -159,7 +159,7 @@ source_ids 僅列真正支持回答的來源 ID，不可捏造。證據不足時
 
 **專案程式碼（節錄）**
 
-檔案：[app/service.py](<../../../app/service.py>)；位置：`RagService.ask`，第 72～78 行。[跳至起始行](<../../../app/service.py#L72>)
+檔案：[app/service.py](../../../app/service.py)；位置：`RagService.ask`，第 72～78 行。[VS Code：第 72 行](../../../app/service.py#L72) · [GitHub：第 72 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/service.py#L72)
 
 <!-- project-code: app/service.py:72-78 -->
 ```python
@@ -182,7 +182,7 @@ else:
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`run_evaluation`，第 134～140 行。[跳至起始行](<../../../app/evaluation.py#L134>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`run_evaluation`，第 134～140 行。[VS Code：第 134 行](../../../app/evaluation.py#L134) · [GitHub：第 134 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L134)
 
 <!-- project-code: app/evaluation.py:134-140 -->
 ```python

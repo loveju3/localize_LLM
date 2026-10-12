@@ -57,7 +57,7 @@ sequenceDiagram
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`EvaluationCase`，第 21～30 行。[跳至起始行](<../../../app/evaluation.py#L21>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`EvaluationCase`，第 21～30 行。[VS Code：第 21 行](../../../app/evaluation.py#L21) · [GitHub：第 21 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L21)
 
 <!-- project-code: app/evaluation.py:21-30 -->
 ```python
@@ -83,7 +83,7 @@ class EvaluationCase(BaseModel):
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`run_evaluation`，第 134～146 行。[跳至起始行](<../../../app/evaluation.py#L134>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`run_evaluation`，第 134～146 行。[VS Code：第 134 行](../../../app/evaluation.py#L134) · [GitHub：第 134 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L134)
 
 <!-- project-code: app/evaluation.py:134-146 -->
 ```python
@@ -112,7 +112,7 @@ emit(record)
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`score`，第 65～81 行。[跳至起始行](<../../../app/evaluation.py#L65>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`score`，第 65～81 行。[VS Code：第 65 行](../../../app/evaluation.py#L65) · [GitHub：第 65 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L65)
 
 <!-- project-code: app/evaluation.py:65-81 -->
 ```python
@@ -145,7 +145,7 @@ def score(case, sources, result):
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`score`，第 74～81 行。[跳至起始行](<../../../app/evaluation.py#L74>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`score`，第 74～81 行。[VS Code：第 74 行](../../../app/evaluation.py#L74) · [GitHub：第 74 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L74)
 
 <!-- project-code: app/evaluation.py:74-81 -->
 ```python
@@ -169,7 +169,7 @@ return {
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`run_evaluation`，第 117～129 行。[跳至起始行](<../../../app/evaluation.py#L117>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`run_evaluation`，第 117～129 行。[VS Code：第 117 行](../../../app/evaluation.py#L117) · [GitHub：第 117 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L117)
 
 <!-- project-code: app/evaluation.py:117-129 -->
 ```python
@@ -198,7 +198,7 @@ for case in cases:
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`run_evaluation`，第 111～115 行。[跳至起始行](<../../../app/evaluation.py#L111>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`run_evaluation`，第 111～115 行。[VS Code：第 111 行](../../../app/evaluation.py#L111) · [GitHub：第 111 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L111)
 
 <!-- project-code: app/evaluation.py:111-115 -->
 ```python
@@ -219,7 +219,7 @@ emit({"type": "configuration", "workspace_id": rag.settings.workspace_id,
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`run_evaluation`，第 134～140 行。[跳至起始行](<../../../app/evaluation.py#L134>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`run_evaluation`，第 134～140 行。[VS Code：第 134 行](../../../app/evaluation.py#L134) · [GitHub：第 134 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L134)
 
 <!-- project-code: app/evaluation.py:134-140 -->
 ```python

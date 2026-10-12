@@ -53,7 +53,7 @@ Modal 建立 Linux CUDA 工作環境並提供 GPU；Transformers 載入 tokenize
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_train.py](<../../../deploy/modal_train.py>)；位置：`train_job`，第 17～22 行。[跳至起始行](<../../../deploy/modal_train.py#L17>)
+檔案：[deploy/modal_train.py](../../../deploy/modal_train.py)；位置：`train_job`，第 17～22 行。[VS Code：第 17 行](../../../deploy/modal_train.py#L17) · [GitHub：第 17 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_train.py#L17)
 
 <!-- project-code: deploy/modal_train.py:17-22 -->
 ```python
@@ -75,7 +75,7 @@ Learning rate 決定更新尺度，預設 1e-4；epoch 表示資料集遍歷次�
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train 的 TrainingArguments`，第 151～160 行。[跳至起始行](<../../../training/lora.py#L151>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train 的 TrainingArguments`，第 151～160 行。[VS Code：第 151 行](../../../training/lora.py#L151) · [GitHub：第 151 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L151)
 
 <!-- project-code: training/lora.py:151-160 -->
 ```python
@@ -101,7 +101,7 @@ BF16 用較短浮點表示降低部分記憶體與運算成本，前提是 GPU �
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train 的 TrainingArguments`，第 151～160 行。[跳至起始行](<../../../training/lora.py#L151>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train 的 TrainingArguments`，第 151～160 行。[VS Code：第 151 行](../../../training/lora.py#L151) · [GitHub：第 151 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L151)
 
 <!-- project-code: training/lora.py:151-160 -->
 ```python
@@ -134,7 +134,7 @@ Smoke 模式把 max_steps 設為 2，確認資料、loss、梯度、評估與產
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_train.py](<../../../deploy/modal_train.py>)；位置：`main`，第 26～32 行。[跳至起始行](<../../../deploy/modal_train.py#L26>)
+檔案：[deploy/modal_train.py](../../../deploy/modal_train.py)；位置：`main`，第 26～32 行。[VS Code：第 26 行](../../../deploy/modal_train.py#L26) · [GitHub：第 26 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_train.py#L26)
 
 <!-- project-code: deploy/modal_train.py:26-32 -->
 ```python
@@ -164,7 +164,7 @@ Loss 波動可能來自題目差異與小 batch。訓練 loss 降、validation l
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`Metrics.on_log`，第 130～144 行。[跳至起始行](<../../../training/lora.py#L130>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`Metrics.on_log`，第 130～144 行。[VS Code：第 130 行](../../../training/lora.py#L130) · [GitHub：第 130 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L130)
 
 <!-- project-code: training/lora.py:130-144 -->
 ```python
@@ -195,7 +195,7 @@ def on_log(self, args, state, control, logs=None, **kwargs):
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 151～165 行。[跳至起始行](<../../../training/lora.py#L151>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 151～165 行。[VS Code：第 151 行](../../../training/lora.py#L151) · [GitHub：第 151 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L151)
 
 <!-- project-code: training/lora.py:151-165 -->
 ```python
@@ -226,7 +226,7 @@ final = trainer.evaluate()
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 163～175 行。[跳至起始行](<../../../training/lora.py#L163>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 163～175 行。[VS Code：第 163 行](../../../training/lora.py#L163) · [GitHub：第 163 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L163)
 
 <!-- project-code: training/lora.py:163-175 -->
 ```python

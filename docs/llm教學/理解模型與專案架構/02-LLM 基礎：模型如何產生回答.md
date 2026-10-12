@@ -49,7 +49,7 @@ Token 是 tokenizer 切分文字後的單位，可能是字、詞的一部分、
 
 **專案程式碼（節錄）**
 
-檔案：[app/embeddings.py](<../../../app/embeddings.py>)；位置：`Embedder.encode`，第 24～26 行。[跳至起始行](<../../../app/embeddings.py#L24>)
+檔案：[app/embeddings.py](../../../app/embeddings.py)；位置：`Embedder.encode`，第 24～26 行。[VS Code：第 24 行](../../../app/embeddings.py#L24) · [GitHub：第 24 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/embeddings.py#L24)
 
 <!-- project-code: app/embeddings.py:24-26 -->
 ```python
@@ -78,7 +78,7 @@ MLP 在每個位置上進行非線性特徵轉換。Attention 與 MLP 配合殘�
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 114～116 行。[跳至起始行](<../../../training/lora.py#L114>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 114～116 行。[VS Code：第 114 行](../../../training/lora.py#L114) · [GitHub：第 114 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L114)
 
 <!-- project-code: training/lora.py:114-116 -->
 ```python
@@ -97,7 +97,7 @@ model = get_peft_model(model, LoraConfig(r=config.rank, lora_alpha=config.alpha,
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`TrainConfig`，第 12～23 行。[跳至起始行](<../../../training/lora.py#L12>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`TrainConfig`，第 12～23 行。[VS Code：第 12 行](../../../training/lora.py#L12) · [GitHub：第 12 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L12)
 
 <!-- project-code: training/lora.py:12-23 -->
 ```python
@@ -133,7 +133,7 @@ GPU 記憶體不只裝模型權重。推論還需要 KV cache、暫存張量與�
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_vllm.py](<../../../deploy/modal_vllm.py>)；位置：`serve`，第 54～58 行。[跳至起始行](<../../../deploy/modal_vllm.py#L54>)
+檔案：[deploy/modal_vllm.py](../../../deploy/modal_vllm.py)；位置：`serve`，第 54～58 行。[VS Code：第 54 行](../../../deploy/modal_vllm.py#L54) · [GitHub：第 54 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_vllm.py#L54)
 
 <!-- project-code: deploy/modal_vllm.py:54-58 -->
 ```python

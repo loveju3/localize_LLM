@@ -5,6 +5,8 @@ from uuid import uuid4
 
 from app.documents import parse_pdf
 from app.inference import PROMPT_VERSION, validate_answer
+from app.skills import load_skill
+from app.tools import DocumentTools, SEARCH_TOOL, tool_message
 
 
 class RagService:
@@ -92,3 +94,44 @@ class RagService:
         return {"answer": answer, "model": {key: model[key] for key in
                 ("id", "base_model", "base_revision", "served_name")},
                 "usage": usage, "elapsed_seconds": round(time.monotonic() - started, 3)}
+
+    def document_chat(self, messages, document_ids=None):
+        started = time.monotonic()
+        self.repo.validate()
+        model = self.repo.active_model()
+        if not model:
+            raise ValueError("尚未選擇可用的生成模型")
+        skill = load_skill("document-qa")
+        history = [{"role": "system", "content": skill["instructions"]}, *messages]
+        executor = DocumentTools(self.search, document_ids)
+        usage, attempts = {}, 0
+        result = validate_answer("{}", [])
+        stop_reason = "invalid_answer"
+        # Two tool attempts (including invalid calls), then one final generation.
+        for _ in range(3):
+            choice = "none" if attempts >= 2 else "auto"
+            message, tokens = self.inference.next_message(history, model, [SEARCH_TOOL], choice)
+            for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+                value = tokens.get(key, 0)
+                if isinstance(value, int) and not isinstance(value, bool):
+                    usage[key] = usage.get(key, 0) + value
+            calls = message.get("tool_calls") or []
+            if not calls:
+                result = validate_answer(message.get("content"), list(executor.sources.values()))
+                stop_reason = "insufficient_evidence" if result["insufficient_evidence"] else "completed"
+                break
+            if choice == "none" or len(calls) > 2 - attempts:
+                stop_reason = "tool_limit"
+                break
+            history.append(message)
+            for call in calls:
+                attempts += 1
+                history.append(tool_message(call, executor.execute(call)))
+        if stop_reason == "tool_limit":
+            result["answer"] = "已達文件搜尋次數上限，無法完成可核對的回答。請縮小問題範圍後重試。"
+        result.update({"mode": "document", "skill": skill["name"],
+                       "tool_trace": executor.trace, "stop_reason": stop_reason,
+                       "model": {key: model[key] for key in
+                                 ("id", "base_model", "base_revision", "served_name")},
+                       "usage": usage, "elapsed_seconds": round(time.monotonic() - started, 3)})
+        return result

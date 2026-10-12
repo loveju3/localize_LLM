@@ -63,6 +63,8 @@ class ChatMessage(BaseModel):
 
 
 class ChatRequest(BaseModel):
+    mode: Literal["direct", "document"] = "direct"
+    document_ids: list[UUID] | None = Field(default=None, min_length=1, max_length=50)
     messages: list[ChatMessage] = Field(min_length=1, max_length=20)
 
     @model_validator(mode="after")
@@ -230,6 +232,8 @@ def ask(body: Question):
 
 @app.post("/api/chat", dependencies=[Depends(authorize)])
 def chat(body: ChatRequest):
+    if body.mode == "document":
+        return service().document_chat([message.model_dump() for message in body.messages], body.document_ids)
     return service().chat([message.model_dump() for message in body.messages])
 
 

@@ -59,7 +59,7 @@ sequenceDiagram
 
 **專案程式碼（節錄）**
 
-檔案：[app/artifacts.py](<../../../app/artifacts.py>)；位置：`upload_lora`，第 35～45 行。[跳至起始行](<../../../app/artifacts.py#L35>)
+檔案：[app/artifacts.py](../../../app/artifacts.py)；位置：`upload_lora`，第 35～45 行。[VS Code：第 35 行](../../../app/artifacts.py#L35) · [GitHub：第 35 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/artifacts.py#L35)
 
 <!-- project-code: app/artifacts.py:35-45 -->
 ```python
@@ -86,7 +86,7 @@ Adapter 學習的是相對於某份基礎權重的更新。如果換了基礎模
 
 **專案程式碼（節錄）**
 
-檔案：[app/lora_ui.py](<../../../app/lora_ui.py>)；位置：`save_upload`，第 25～33 行。[跳至起始行](<../../../app/lora_ui.py#L25>)
+檔案：[app/lora_ui.py](../../../app/lora_ui.py)；位置：`save_upload`，第 25～33 行。[VS Code：第 25 行](../../../app/lora_ui.py#L25) · [GitHub：第 25 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/lora_ui.py#L25)
 
 <!-- project-code: app/lora_ui.py:25-33 -->
 ```python
@@ -111,7 +111,7 @@ try:
 
 **專案程式碼（節錄）**
 
-檔案：[app/artifacts.py](<../../../app/artifacts.py>)；位置：`upload_lora`，第 42～51 行。[跳至起始行](<../../../app/artifacts.py#L42>)
+檔案：[app/artifacts.py](../../../app/artifacts.py)；位置：`upload_lora`，第 42～51 行。[VS Code：第 42 行](../../../app/artifacts.py#L42) · [GitHub：第 42 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/artifacts.py#L42)
 
 <!-- project-code: app/artifacts.py:42-51 -->
 ```python
@@ -137,7 +137,7 @@ return repo.register_model({"id": model_id, "kind": "lora", "base_model": base_m
 
 **專案程式碼（節錄）**
 
-檔案：[app/service.py](<../../../app/service.py>)；位置：`RagService.model_statuses`，第 43～53 行。[跳至起始行](<../../../app/service.py#L43>)
+檔案：[app/service.py](../../../app/service.py)；位置：`RagService.model_statuses`，第 43～53 行。[VS Code：第 43 行](../../../app/service.py#L43) · [GitHub：第 43 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/service.py#L43)
 
 <!-- project-code: app/service.py:43-53 -->
 ```python
@@ -164,7 +164,7 @@ def model_statuses(self):
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_vllm.py](<../../../deploy/modal_vllm.py>)；位置：`serve`，第 53～63 行。[跳至起始行](<../../../deploy/modal_vllm.py#L53>)
+檔案：[deploy/modal_vllm.py](../../../deploy/modal_vllm.py)；位置：`serve`，第 53～63 行。[VS Code：第 53 行](../../../deploy/modal_vllm.py#L53) · [GitHub：第 53 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_vllm.py#L53)
 
 <!-- project-code: deploy/modal_vllm.py:53-63 -->
 ```python
@@ -185,7 +185,7 @@ process = subprocess.Popen(args)
 
 **專案程式碼（節錄）**
 
-檔案：[app/lora_ui.py](<../../../app/lora_ui.py>)；位置：`load_adapter`，第 47～59 行。[跳至起始行](<../../../app/lora_ui.py#L47>)
+檔案：[app/lora_ui.py](../../../app/lora_ui.py)；位置：`load_adapter`，第 47～59 行。[VS Code：第 47 行](../../../app/lora_ui.py#L47) · [GitHub：第 47 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/lora_ui.py#L47)
 
 <!-- project-code: app/lora_ui.py:47-59 -->
 ```python
@@ -214,7 +214,7 @@ A 選原模型，B 選實際載入的 adapter，使用同一 case 的 messages�
 
 **專案程式碼（節錄）**
 
-檔案：[app/lol_lab.py](<../../../app/lol_lab.py>)；位置：`run_case`，第 18～25 行。[跳至起始行](<../../../app/lol_lab.py#L18>)
+檔案：[app/lol_lab.py](../../../app/lol_lab.py)；位置：`run_case`，第 18～25 行。[VS Code：第 18 行](../../../app/lol_lab.py#L18) · [GitHub：第 18 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/lol_lab.py#L18)
 
 <!-- project-code: app/lol_lab.py:18-25 -->
 ```python
@@ -238,7 +238,7 @@ LoL 頁面的 keyword_match 是每組關鍵字至少命中一個，且所有組�
 
 **專案程式碼（節錄）**
 
-檔案：[app/lol_lab.py](<../../../app/lol_lab.py>)；位置：`run_case`，第 26～34 行。[跳至起始行](<../../../app/lol_lab.py#L26>)
+檔案：[app/lol_lab.py](../../../app/lol_lab.py)；位置：`run_case`，第 26～34 行。[VS Code：第 26 行](../../../app/lol_lab.py#L26) · [GitHub：第 26 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/lol_lab.py#L26)
 
 <!-- project-code: app/lol_lab.py:26-34 -->
 ```python

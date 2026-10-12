@@ -19,8 +19,11 @@ nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}nav.tabs a{padding:10
 <p><small>只能選擇雲端 vLLM 已載入的模型。變更適用於之後送出的問題。</small></p></section>
 <section><h2>問問題</h2><textarea id="question" placeholder="例如：這份報告的主要結論有哪些？"></textarea>
 <button id="ask">詢問</button><button id="search">只搜尋文件</button><div id="answer"></div><div id="sources"></div></section>
-<section><h2>直接與模型對話</h2>
-<p><small>使用共用預設模型，不搜尋文件，也不提供文件引用。對話僅保留在目前頁面；送出時會連同歷史訊息傳給雲端模型。</small></p>
+<section><h2>與模型對話</h2>
+<label><input id="chat-grounded" type="checkbox">依據文件回答</label>
+<div id="chat-scope" hidden><label>搜尋範圍 <select id="chat-documents" multiple aria-label="搜尋文件"></select></label>
+<p><small>未選取時搜尋工作區全部文件；可按住 Command／Ctrl 選取多份。</small></p></div>
+<p><small>使用共用預設模型。勾選後會搜尋文件並提供引用；切換模式或文件範圍會清除對話。對話僅保留在目前頁面，送出時會傳給雲端模型。</small></p>
 <div id="chat-history" aria-live="polite"></div>
 <textarea id="chat-question" maxlength="2000" placeholder="例如：請用一句話介紹你能提供的協助。"></textarea>
 <button id="chat-send">傳送對話</button> <button id="chat-clear">清除對話</button>
@@ -31,8 +34,8 @@ function rememberLogin(response){if(response.ok)sessionStorage.setItem(sessionKe
 window.addEventListener('DOMContentLoaded',()=>{const input=document.getElementById('key');const saved=sessionStorage.getItem(sessionKey);if(saved){input.value=saved;document.getElementById('connect').click();}const logout=document.createElement('button');logout.textContent='登出';logout.id='logout';logout.onclick=()=>{sessionStorage.removeItem(sessionKey);input.value='';location.reload();};document.getElementById('connect').after(logout);});
 
 const el=id=>document.getElementById(id);
-let chatHistory=[];
-function clearChat(){chatHistory=[];el('chat-history').replaceChildren();el('chat-meta').textContent='';el('chat-question').value='';}
+let chatHistory=[],chatCitations=[];
+function clearChat(){chatHistory=[];chatCitations=[];el('chat-history').replaceChildren();el('chat-meta').textContent='';el('chat-question').value='';}
 async function api(path,options={}) {
   const headers={Authorization:'Bearer '+el('key').value,...options.headers};
   const response=await fetch('/api/'+path,{...options,headers});
@@ -41,14 +44,17 @@ async function api(path,options={}) {
   return data;
 }
 async function run(action){
-  el('status').textContent='處理中…';document.querySelectorAll('button').forEach(b=>b.disabled=true);
+  el('status').textContent='處理中…';document.querySelectorAll('button,#chat-grounded,#chat-documents').forEach(b=>b.disabled=true);
   try{await action();el('status').textContent='完成';}catch(e){el('status').textContent=e.message;}
-  finally{document.querySelectorAll('button').forEach(b=>b.disabled=false);}
+  finally{document.querySelectorAll('button,#chat-grounded,#chat-documents').forEach(b=>b.disabled=false);}
 }
 function text(parent,tag,value){const node=document.createElement(tag);node.textContent=value;parent.appendChild(node);return node;}
 async function refresh(){
   const ws=await api('workspace');el('workspace').textContent='工作區：'+ws.id+'｜Embedding：'+ws.embedding_spec.model;
   const docs=await api('documents');el('documents').replaceChildren();
+  const selected=new Set(Array.from(el('chat-documents').selectedOptions,o=>o.value));
+  el('chat-documents').replaceChildren();
+  for(const doc of docs){const option=text(el('chat-documents'),'option',doc.filename);option.value=doc.id;option.selected=selected.has(doc.id);}
   for(const doc of docs){const row=document.createElement('div');
     text(row,'span',doc.filename+' · '+doc.page_count+' 頁 ');
     const button=text(row,'button','開啟原檔');button.onclick=()=>run(async()=>{
@@ -74,16 +80,24 @@ el('upload').onclick=()=>run(async()=>{if(!el('file').files.length)throw new Err
 el('activate').onclick=()=>run(async()=>{if(!el('model').value)throw new Error('尚無可用模型');
   await api('models/'+encodeURIComponent(el('model').value)+'/activate',{method:'POST'});clearChat();await refresh();});
 el('chat-clear').onclick=clearChat;
+el('chat-grounded').onchange=()=>{el('chat-scope').hidden=!el('chat-grounded').checked;clearChat();};
+el('chat-documents').onchange=clearChat;
 el('chat-send').onclick=()=>run(async()=>{
   const question=el('chat-question').value.trim();if(!question)throw new Error('請輸入對話內容');
   const messages=[...chatHistory,{role:'user',content:question}];
   if(messages.length>20||messages.reduce((n,m)=>n+m.content.length,0)>12000)throw new Error('對話過長，請清除對話後重試');
-  const result=await api('chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages})});
+  const documentIds=Array.from(el('chat-documents').selectedOptions,o=>o.value);
+  const result=await api('chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,
+    mode:el('chat-grounded').checked?'document':'direct',document_ids:documentIds.length?documentIds:null})});
   chatHistory=[...messages,{role:'assistant',content:result.answer}];
-  el('chat-history').replaceChildren();for(const message of chatHistory){
+  chatCitations.push([],result.citations||[]);
+  el('chat-history').replaceChildren();for(const [i,message] of chatHistory.entries()){
     text(el('chat-history'),'strong',message.role==='user'?'你':'模型');text(el('chat-history'),'pre',message.content);
+    for(const source of chatCitations[i]||[]){const box=text(el('chat-history'),'details','');box.className='source';
+      text(box,'summary',source.source_id+' · '+source.filename+' · PDF 第 '+source.page+' 頁');text(box,'pre',source.text);}
   }
-  el('chat-question').value='';el('chat-meta').textContent='模型：'+result.model.id+'｜'+result.elapsed_seconds+' 秒';
+  el('chat-question').value='';el('chat-meta').textContent='模型：'+result.model.id+'｜'+result.elapsed_seconds+' 秒'+
+    (result.tool_trace?'｜文件搜尋 '+result.tool_trace.filter(t=>t.status==='ok').length+' 次':'');
 });
 for(const mode of ['ask','search'])el(mode).onclick=()=>run(async()=>{
   const result=await api(mode,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:el('question').value})});

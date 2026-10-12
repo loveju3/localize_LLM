@@ -9,6 +9,7 @@
 - [第一版啟動與操作](docs/getting-started.md)
 - [驗證紀錄與未驗證項目](docs/verification.md)
 - [批次問答評估與模型比較](docs/evaluation.md)
+- [Skill 與文件搜尋 Tool：聊天功能、部署需求與測試](docs/document-chat.md)
 - [真實雲端測試與更換 RunPod 設定](docs/cloud-validation.md)
 - [RunPod／Modal 相容部署與切換](docs/modal-deployment.md)
 - [英雄聯盟 LoRA 試驗資料與分頁比較](datasets/lol/README.md)
@@ -44,6 +45,16 @@ python -m pip freeze > requirements.txt
 需要連接雲端服務時，複製 `.env.example` 為 `.env` 並填寫設定。`.env`、文件、模型與快取皆已排除 Git。應用程式會透過 Pydantic Settings 載入設定；範本不含真實金鑰。
 
 ## 啟動
+
+需要啟動時先確認 Neon／Modal 就緒、關閉時一併停止雲端運算，請先完成 [統一啟動／關閉設定](docs/project-lifecycle.md)，再使用：
+
+```bash
+./project start   # 前景執行；Ctrl+C 也會一併清理
+./project status # 另一個終端機查看，不會喚醒雲端
+./project stop   # 停止受管理網站、Modal 推論部署，暫停 Neon compute
+```
+
+以下原始命令保留按需連線模式，不會管理雲端啟停：
 
 ```bash
 source .venv/bin/activate

@@ -33,6 +33,14 @@ class Settings(BaseSettings):
     retrieval_k: int = Field(default=5, ge=1, le=8)
     min_similarity: float = Field(default=0.35, ge=-1, le=1)
     llm_timeout_seconds: int = Field(default=180, ge=1)
+    neon_api_key: SecretStr = SecretStr("")
+    neon_project_id: str = Field(default="", pattern=r"^[a-z0-9-]{0,60}$")
+    neon_endpoint_id: str = Field(default="", pattern=r"^(ep-[a-z0-9-]{1,57})?$")
+    modal_profile: str = ""
+    modal_environment: str = "main"
+    modal_workspace: str = ""
+    project_port: int = Field(default=8000, ge=1024, le=65535)
+    project_start_timeout: int = Field(default=900, ge=30, le=1800)
 
     def require(self, *names):
         missing = []

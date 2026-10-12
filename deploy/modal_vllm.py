@@ -55,7 +55,8 @@ def serve():
             "--host", "127.0.0.1", "--port", "8000", "--dtype", "auto",
             "--enforce-eager", "--gpu-memory-utilization", "0.90",
             "--max-model-len", "8128", "--max-num-seqs", "1",
-            "--enable-lora", "--max-lora-rank", "64", "--max-cpu-loras", "32"]
+            "--enable-lora", "--max-lora-rank", "64", "--max-cpu-loras", "32",
+            "--enable-auto-tool-choice", "--tool-call-parser", "hermes"]
     saved = sorted(p for p in Path("/adapters").glob("*/adapter_config.json") if not p.parent.name.startswith("."))
     if saved:
         args += ["--lora-modules", *[json.dumps({"name": p.parent.name,

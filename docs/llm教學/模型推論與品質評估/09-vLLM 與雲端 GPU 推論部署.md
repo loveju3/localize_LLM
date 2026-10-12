@@ -48,7 +48,7 @@ vLLM 在此負責載入模型、管理推論記憶體、處理生成請求並提
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_vllm.py](<../../../deploy/modal_vllm.py>)；位置：`serve`，第 54～63 行。[跳至起始行](<../../../deploy/modal_vllm.py#L54>)
+檔案：[deploy/modal_vllm.py](../../../deploy/modal_vllm.py)；位置：`serve`，第 54～63 行。[VS Code：第 54 行](../../../deploy/modal_vllm.py#L54) · [GitHub：第 54 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_vllm.py#L54)
 
 <!-- project-code: deploy/modal_vllm.py:54-63 -->
 ```python
@@ -74,7 +74,7 @@ OpenAI-compatible 表示此處沿用 API 形狀，不代表模型由 OpenAI 提�
 
 **專案程式碼（節錄）**
 
-檔案：[app/inference.py](<../../../app/inference.py>)；位置：`Inference.client／served_models`，第 18～28 行。[跳至起始行](<../../../app/inference.py#L18>)
+檔案：[app/inference.py](../../../app/inference.py)；位置：`Inference.client／served_models`，第 18～28 行。[VS Code：第 18 行](../../../app/inference.py#L18) · [GitHub：第 18 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/inference.py#L18)
 
 <!-- project-code: app/inference.py:18-28 -->
 ```python
@@ -101,7 +101,7 @@ RunPod 路徑把服務部署在租用的 GPU 主機；操作者管理啟停。Mo
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/select_backend.py](<../../../deploy/select_backend.py>)；位置：`main`，第 28～32 行。[跳至起始行](<../../../deploy/select_backend.py#L28>)
+檔案：[deploy/select_backend.py](../../../deploy/select_backend.py)；位置：`main`，第 28～32 行。[VS Code：第 28 行](../../../deploy/select_backend.py#L28) · [GitHub：第 28 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/select_backend.py#L28)
 
 <!-- project-code: deploy/select_backend.py:28-32 -->
 ```python
@@ -122,7 +122,7 @@ Modal 的 CPU 下載函式先把固定 revision 模型放入快取 Volume，減�
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_vllm.py](<../../../deploy/modal_vllm.py>)；位置：`serve.lifespan`，第 66～79 行。[跳至起始行](<../../../deploy/modal_vllm.py#L66>)
+檔案：[deploy/modal_vllm.py](../../../deploy/modal_vllm.py)；位置：`serve.lifespan`，第 66～79 行。[VS Code：第 66 行](../../../deploy/modal_vllm.py#L66) · [GitHub：第 66 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_vllm.py#L66)
 
 <!-- project-code: deploy/modal_vllm.py:66-79 -->
 ```python
@@ -152,7 +152,7 @@ GPU memory utilization 是 vLLM 記憶體預算設定，不是「GPU 使用率 9
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_vllm.py](<../../../deploy/modal_vllm.py>)；位置：`serve`，第 54～58 行。[跳至起始行](<../../../deploy/modal_vllm.py#L54>)
+檔案：[deploy/modal_vllm.py](../../../deploy/modal_vllm.py)；位置：`serve`，第 54～58 行。[VS Code：第 54 行](../../../deploy/modal_vllm.py#L54) · [GitHub：第 54 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_vllm.py#L54)
 
 <!-- project-code: deploy/modal_vllm.py:54-58 -->
 ```python
@@ -173,7 +173,7 @@ args = ["vllm", "serve", MODEL, "--revision", REVISION,
 
 **專案程式碼（節錄）**
 
-檔案：[deploy/modal_vllm.py](<../../../deploy/modal_vllm.py>)；位置：`serve 的 Modal decorators`，第 35～42 行。[跳至起始行](<../../../deploy/modal_vllm.py#L35>)
+檔案：[deploy/modal_vllm.py](../../../deploy/modal_vllm.py)；位置：`serve 的 Modal decorators`，第 35～42 行。[VS Code：第 35 行](../../../deploy/modal_vllm.py#L35) · [GitHub：第 35 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/deploy/modal_vllm.py#L35)
 
 <!-- project-code: deploy/modal_vllm.py:35-42 -->
 ```python
@@ -197,7 +197,7 @@ GPU 費用還可能包含啟動、保溫與閒置時間，另有持久儲存。T
 
 **專案程式碼（節錄）**
 
-檔案：[app/service.py](<../../../app/service.py>)；位置：`RagService.ask`，第 79～83 行。[跳至起始行](<../../../app/service.py#L79>)
+檔案：[app/service.py](../../../app/service.py)；位置：`RagService.ask`，第 79～83 行。[VS Code：第 79 行](../../../app/service.py#L79) · [GitHub：第 79 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/service.py#L79)
 
 <!-- project-code: app/service.py:79-83 -->
 ```python

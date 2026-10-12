@@ -45,7 +45,7 @@ sequenceDiagram
 
 **專案程式碼（節錄）**
 
-檔案：[app/schema.sql](<../../../app/schema.sql>)；位置：`rag_chunks 資料表`，第 21～30 行。[跳至起始行](<../../../app/schema.sql#L21>)
+檔案：[app/schema.sql](../../../app/schema.sql)；位置：`rag_chunks 資料表`，第 21～30 行。[VS Code：第 21 行](../../../app/schema.sql#L21) · [GitHub：第 21 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/schema.sql#L21)
 
 <!-- project-code: app/schema.sql:21-30 -->
 ```sql
@@ -80,7 +80,7 @@ LIMIT 5;
 
 **專案程式碼（節錄）**
 
-檔案：[app/db.py](<../../../app/db.py>)；位置：`Repository.search`，第 80～89 行。[跳至起始行](<../../../app/db.py#L80>)
+檔案：[app/db.py](../../../app/db.py)；位置：`Repository.search`，第 80～89 行。[VS Code：第 80 行](../../../app/db.py#L80) · [GitHub：第 80 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/db.py#L80)
 
 <!-- project-code: app/db.py:80-89 -->
 ```python
@@ -106,7 +106,7 @@ def search(self, vector, limit, document_ids):
 
 **專案程式碼（節錄）**
 
-檔案：[app/service.py](<../../../app/service.py>)；位置：`RagService.search`，第 33～41 行。[跳至起始行](<../../../app/service.py#L33>)
+檔案：[app/service.py](../../../app/service.py)；位置：`RagService.search`，第 33～41 行。[VS Code：第 33 行](../../../app/service.py#L33) · [GitHub：第 33 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/service.py#L33)
 
 <!-- project-code: app/service.py:33-41 -->
 ```python
@@ -131,7 +131,7 @@ def search(self, question, document_ids=None):
 
 **專案程式碼（節錄）**
 
-檔案：[app/db.py](<../../../app/db.py>)；位置：`Repository.search`，第 83～89 行。[跳至起始行](<../../../app/db.py#L83>)
+檔案：[app/db.py](../../../app/db.py)；位置：`Repository.search`，第 83～89 行。[VS Code：第 83 行](../../../app/db.py#L83) · [GitHub：第 83 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/db.py#L83)
 
 <!-- project-code: app/db.py:83-89 -->
 ```python
@@ -154,7 +154,7 @@ return conn.execute("""SELECT c.id, c.document_id, c.page_number, c.content,
 
 **專案程式碼（節錄）**
 
-檔案：[app/service.py](<../../../app/service.py>)；位置：`RagService.search`，第 37～41 行。[跳至起始行](<../../../app/service.py#L37>)
+檔案：[app/service.py](../../../app/service.py)；位置：`RagService.search`，第 37～41 行。[VS Code：第 37 行](../../../app/service.py#L37) · [GitHub：第 37 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/service.py#L37)
 
 <!-- project-code: app/service.py:37-41 -->
 ```python
@@ -175,7 +175,7 @@ return [{"source_id": f"S{i + 1}", "chunk_id": str(row["id"]),
 
 **專案程式碼（節錄）**
 
-檔案：[app/evaluation.py](<../../../app/evaluation.py>)；位置：`run_evaluation`，第 111～115 行。[跳至起始行](<../../../app/evaluation.py#L111>)
+檔案：[app/evaluation.py](../../../app/evaluation.py)；位置：`run_evaluation`，第 111～115 行。[VS Code：第 111 行](../../../app/evaluation.py#L111) · [GitHub：第 111 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/evaluation.py#L111)
 
 <!-- project-code: app/evaluation.py:111-115 -->
 ```python

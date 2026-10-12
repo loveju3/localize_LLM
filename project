@@ -1,0 +1,5 @@
+#!/bin/sh
+# Resolve the project directory even when invoked from another working directory.
+PROJECT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || exit 1
+cd "$PROJECT_DIR" || exit 1
+exec "$PROJECT_DIR/.venv/bin/python" -m app.lifecycle "$@"

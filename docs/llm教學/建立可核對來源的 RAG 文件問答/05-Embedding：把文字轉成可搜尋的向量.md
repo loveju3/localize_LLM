@@ -51,7 +51,7 @@ sequenceDiagram
 
 **專案程式碼（節錄）**
 
-檔案：[app/embeddings.py](<../../../app/embeddings.py>)；位置：`Embedder.encode`，第 27～34 行。[跳至起始行](<../../../app/embeddings.py#L27>)
+檔案：[app/embeddings.py](../../../app/embeddings.py)；位置：`Embedder.encode`，第 27～34 行。[VS Code：第 27 行](../../../app/embeddings.py#L27) · [GitHub：第 27 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/embeddings.py#L27)
 
 <!-- project-code: app/embeddings.py:27-34 -->
 ```python
@@ -75,7 +75,7 @@ BGE-M3 本身有多種檢索表示能力，但本專案透過一般 `SentenceTra
 
 **專案程式碼（節錄）**
 
-檔案：[app/embeddings.py](<../../../app/embeddings.py>)；位置：`Embedder.encode`，第 13～21 行。[跳至起始行](<../../../app/embeddings.py#L13>)
+檔案：[app/embeddings.py](../../../app/embeddings.py)；位置：`Embedder.encode`，第 13～21 行。[VS Code：第 13 行](../../../app/embeddings.py#L13) · [GitHub：第 13 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/embeddings.py#L13)
 
 <!-- project-code: app/embeddings.py:13-21 -->
 ```python
@@ -100,7 +100,7 @@ def encode(self, texts, query=False):
 
 **專案程式碼（節錄）**
 
-檔案：[app/embeddings.py](<../../../app/embeddings.py>)；位置：`Embedder.encode`，第 27～33 行。[跳至起始行](<../../../app/embeddings.py#L27>)
+檔案：[app/embeddings.py](../../../app/embeddings.py)；位置：`Embedder.encode`，第 27～33 行。[VS Code：第 27 行](../../../app/embeddings.py#L27) · [GitHub：第 27 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/embeddings.py#L27)
 
 <!-- project-code: app/embeddings.py:27-33 -->
 ```python
@@ -123,7 +123,7 @@ if not np.isfinite(vectors).all() or (np.linalg.norm(vectors, axis=1) == 0).any(
 
 **專案程式碼（節錄）**
 
-檔案：[app/embeddings.py](<../../../app/embeddings.py>)；位置：`Embedder.encode`，第 22～28 行。[跳至起始行](<../../../app/embeddings.py#L22>)
+檔案：[app/embeddings.py](../../../app/embeddings.py)；位置：`Embedder.encode`，第 22～28 行。[VS Code：第 22 行](../../../app/embeddings.py#L22) · [GitHub：第 22 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/embeddings.py#L22)
 
 <!-- project-code: app/embeddings.py:22-28 -->
 ```python
@@ -146,7 +146,7 @@ vectors = self._model.encode(texts, prompt=prompt, batch_size=8,
 
 **專案程式碼（節錄）**
 
-檔案：[app/embeddings.py](<../../../app/embeddings.py>)；位置：`Embedder.encode`，第 13～21 行。[跳至起始行](<../../../app/embeddings.py#L13>)
+檔案：[app/embeddings.py](../../../app/embeddings.py)；位置：`Embedder.encode`，第 13～21 行。[VS Code：第 13 行](../../../app/embeddings.py#L13) · [GitHub：第 13 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/embeddings.py#L13)
 
 <!-- project-code: app/embeddings.py:13-21 -->
 ```python
@@ -171,7 +171,7 @@ def encode(self, texts, query=False):
 
 **專案程式碼（節錄）**
 
-檔案：[app/config.py](<../../../app/config.py>)；位置：`Settings.embedding_spec／embedding_fingerprint`，第 53～64 行。[跳至起始行](<../../../app/config.py#L53>)
+檔案：[app/config.py](../../../app/config.py)；位置：`Settings.embedding_spec／embedding_fingerprint`，第 53～64 行。[VS Code：第 53 行](../../../app/config.py#L53) · [GitHub：第 53 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/config.py#L53)
 
 <!-- project-code: app/config.py:53-64 -->
 ```python
@@ -199,7 +199,7 @@ def embedding_fingerprint(self):
 
 **專案程式碼（節錄）**
 
-檔案：[app/db.py](<../../../app/db.py>)；位置：`Repository._validate`，第 32～41 行。[跳至起始行](<../../../app/db.py#L32>)
+檔案：[app/db.py](../../../app/db.py)；位置：`Repository._validate`，第 32～41 行。[VS Code：第 32 行](../../../app/db.py#L32) · [GitHub：第 32 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/app/db.py#L32)
 
 <!-- project-code: app/db.py:32-41 -->
 ```python

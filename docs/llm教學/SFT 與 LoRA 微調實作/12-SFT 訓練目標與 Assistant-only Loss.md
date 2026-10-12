@@ -48,7 +48,7 @@ SFT 使用已知的示範回答，讓模型在相同前文下更容易產生這�
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 161～168 行。[跳至起始行](<../../../training/lora.py#L161>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 161～168 行。[VS Code：第 161 行](../../../training/lora.py#L161) · [GitHub：第 161 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L161)
 
 <!-- project-code: training/lora.py:161-168 -->
 ```python
@@ -72,7 +72,7 @@ Assistant-only 目標只聚合回答位置：$L=-\frac{1}{|M|}\sum_{t\in M}\log 
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 161～165 行。[跳至起始行](<../../../training/lora.py#L161>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 161～165 行。[VS Code：第 161 行](../../../training/lora.py#L161) · [GitHub：第 161 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L161)
 
 <!-- project-code: training/lora.py:161-165 -->
 ```python
@@ -93,7 +93,7 @@ final = trainer.evaluate()
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train.collate`，第 146～149 行。[跳至起始行](<../../../training/lora.py#L146>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train.collate`，第 146～149 行。[VS Code：第 146 行](../../../training/lora.py#L146) · [GitHub：第 146 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L146)
 
 <!-- project-code: training/lora.py:146-149 -->
 ```python
@@ -113,7 +113,7 @@ def collate(samples):
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`encode_sample`，第 66～73 行。[跳至起始行](<../../../training/lora.py#L66>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`encode_sample`，第 66～73 行。[VS Code：第 66 行](../../../training/lora.py#L66) · [GitHub：第 66 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L66)
 
 <!-- project-code: training/lora.py:66-73 -->
 ```python
@@ -137,7 +137,7 @@ return {"input_ids": tokens, "attention_mask": [1] * len(tokens), "labels": labe
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`train`，第 105～110 行。[跳至起始行](<../../../training/lora.py#L105>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`train`，第 105～110 行。[VS Code：第 105 行](../../../training/lora.py#L105) · [GitHub：第 105 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L105)
 
 <!-- project-code: training/lora.py:105-110 -->
 ```python
@@ -153,7 +153,7 @@ val_data = Dataset.from_list([encode_sample(tokenizer, row, config.max_length) f
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`encode_sample`，第 66～73 行。[跳至起始行](<../../../training/lora.py#L66>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`encode_sample`，第 66～73 行。[VS Code：第 66 行](../../../training/lora.py#L66) · [GitHub：第 66 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L66)
 
 <!-- project-code: training/lora.py:66-73 -->
 ```python
@@ -177,7 +177,7 @@ return {"input_ids": tokens, "attention_mask": [1] * len(tokens), "labels": labe
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`encode_sample`，第 56～70 行。[跳至起始行](<../../../training/lora.py#L56>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`encode_sample`，第 56～70 行。[VS Code：第 56 行](../../../training/lora.py#L56) · [GitHub：第 56 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L56)
 
 <!-- project-code: training/lora.py:56-70 -->
 ```python
@@ -208,7 +208,7 @@ for token, (start, end) in zip(tokens, encoded["offset_mapping"]):
 
 **專案程式碼（節錄）**
 
-檔案：[training/lora.py](<../../../training/lora.py>)；位置：`encode_sample`，第 62～73 行。[跳至起始行](<../../../training/lora.py#L62>)
+檔案：[training/lora.py](../../../training/lora.py)；位置：`encode_sample`，第 62～73 行。[VS Code：第 62 行](../../../training/lora.py#L62) · [GitHub：第 62 行](https://github.com/loveju3/localize_LLM/blob/d85ca98b5d775b889dd46a36326fde734bf0d154/training/lora.py#L62)
 
 <!-- project-code: training/lora.py:62-73 -->
 ```python
